@@ -1,3 +1,45 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": "next/core-web-vitals",
+  "plugins": ["simple-import-sort"],
+  "rules": {
+    "simple-import-sort/imports": "warn",
+    "simple-import-sort/exports": "warn"
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "rules": {
+        "import/order": "off",
+        "simple-import-sort/imports": [
+          "warn",
+          {
+            "groups": [
+              // Packages, `react` and `next` related packages come first.
+              ["^react", "^next", "^@?\\w"],
+
+              // Internal packages.
+              [
+                "^@lib?\\w",
+                "^@models?\\w",
+                "^@contexts?\\w",
+                "^@hooks?\\w",
+                "^@pages?\\w",
+                "^@shared?\\w"
+              ],
+
+              // Shared components
+              ["^@components?\\w"],
+
+              // Other relative imports. Put same-folder imports and `.` last.
+              ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"],
+
+              // Relative imports.
+              // Anything that starts with a dot.
+              ["^\\."]
+            ]
+          }
+        ]
+      }
+    }
+  ]
 }
