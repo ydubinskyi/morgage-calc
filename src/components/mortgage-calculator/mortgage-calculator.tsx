@@ -11,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import { AdditionalPaymentsDialog } from "./additional-payments-dialog";
 import {
   MortgageArgs,
   MortgageCalculatorForm,
@@ -100,9 +101,7 @@ export const MortgageCalculator = () => {
           <MortgageCalculatorForm onSubmit={onSubmit} />
         </CardContent>
         <CardFooter>
-          <Button variant="secondary" onClick={onAddMultiAdditionalPayments}>
-            Add bulk additional payment
-          </Button>
+          <AdditionalPaymentsDialog />
         </CardFooter>
       </Card>
 
