@@ -19,7 +19,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={cn(inter.className, "dark")}>
+      <body className={cn(inter.className)}>
         <header className="mx-auto flex max-w-7xl lg:px-8">
           <SiteHeader />
         </header>
