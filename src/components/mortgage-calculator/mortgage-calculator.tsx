@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useDebounce } from "use-debounce";
 
 import { MortgageScheduleTable } from "../mortgage-schedule-table/mortgage-schedule-table";
 import { MortgageSummarySection } from "../mortgage-summary-section/mortgage-summary-section";
@@ -27,6 +28,8 @@ export const MortgageCalculator = () => {
   const [mortgageArgs, setMortgageArgs] = useState<MortgageArgs>();
   const [additionalPayments, setAdditionalPayments] =
     useState<AdditionalPayments>({});
+
+  const [deferredAdditionalPayments] = useDebounce(additionalPayments, 1000);
 
   const [mortgagePaymentsSchedule, setMortgagePaymentsSchedule] = useState<
     MortgageScheduleItem[]
@@ -64,20 +67,20 @@ export const MortgageCalculator = () => {
           principal,
           annualInterestRate,
           loanTermInMonths,
-          additionalPayments
+          deferredAdditionalPayments
         );
       } else {
         schedule = calculateMortgageScheduleDecreasingInstallment(
           principal,
           annualInterestRate,
           loanTermInMonths,
-          additionalPayments
+          deferredAdditionalPayments
         );
       }
 
       setMortgagePaymentsSchedule(schedule);
     },
-    [additionalPayments]
+    [deferredAdditionalPayments]
   );
 
   const onSubmit = (values: MortgageArgs) => {
@@ -90,7 +93,7 @@ export const MortgageCalculator = () => {
     if (mortgageArgs) {
       calculateSchedule(mortgageArgs);
     }
-  }, [additionalPayments, calculateSchedule, mortgageArgs]);
+  }, [calculateSchedule, mortgageArgs]);
 
   return (
     <div className="w-full">

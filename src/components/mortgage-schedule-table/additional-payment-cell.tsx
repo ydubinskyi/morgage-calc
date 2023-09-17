@@ -13,7 +13,7 @@ export const AdditionalPaymentCell = ({
   const { onAdditionalPaymentChange } = useMortgageScheduleTableContext();
   return (
     <Input
-      value={value}
+      defaultValue={value}
       onChange={(e) =>
         onAdditionalPaymentChange(month, Number(e.target.value) ?? 0)
       }
