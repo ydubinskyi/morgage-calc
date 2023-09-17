@@ -5,10 +5,8 @@ import { AdditionalPaymentCell } from "./additional-payment-cell";
 import { MortgageScheduleTableContext } from "./mortgage-schedule-table-context";
 import { PaymentNumberCell } from "./payment-number-cell";
 
-import { sumArrayOfNumbers } from "@/lib/utils";
+import { formatMoneyValue, sumArrayOfNumbers } from "@/lib/utils";
 import { MortgageScheduleItem } from "@/types/mortgage";
-
-const formatNumberValue = (val: number) => `${val.toFixed(2)} zł`;
 
 export const columns = [
   {
@@ -20,9 +18,9 @@ export const columns = [
   {
     accessorKey: "payment",
     header: "Payment",
-    cell: ({ row }) => formatNumberValue(row.original.payment),
+    cell: ({ row }) => formatMoneyValue(row.original.payment),
     footer: ({ table }) =>
-      formatNumberValue(
+      formatMoneyValue(
         sumArrayOfNumbers(
           table.getRowModel().rows.map((item) => item.original.payment)
         )
@@ -31,9 +29,9 @@ export const columns = [
   {
     accessorKey: "interestPayment",
     header: "Interest part",
-    cell: ({ row }) => formatNumberValue(row.original.interestPayment),
+    cell: ({ row }) => formatMoneyValue(row.original.interestPayment),
     footer: ({ table }) =>
-      formatNumberValue(
+      formatMoneyValue(
         sumArrayOfNumbers(
           table.getRowModel().rows.map((item) => item.original.interestPayment)
         )
@@ -42,9 +40,9 @@ export const columns = [
   {
     accessorKey: "principalPayment",
     header: "Principal part",
-    cell: ({ row }) => formatNumberValue(row.original.principalPayment),
+    cell: ({ row }) => formatMoneyValue(row.original.principalPayment),
     footer: ({ table }) =>
-      formatNumberValue(
+      formatMoneyValue(
         sumArrayOfNumbers(
           table.getRowModel().rows.map((item) => item.original.principalPayment)
         )
@@ -53,7 +51,7 @@ export const columns = [
   {
     accessorKey: "remainingPrincipal",
     header: "Remaining principal",
-    cell: ({ row }) => formatNumberValue(row.original.remainingPrincipal),
+    cell: ({ row }) => formatMoneyValue(row.original.remainingPrincipal),
   },
   {
     accessorKey: "additionalPayment",
@@ -65,7 +63,7 @@ export const columns = [
       />
     ),
     footer: ({ table }) =>
-      formatNumberValue(
+      formatMoneyValue(
         sumArrayOfNumbers(
           table
             .getRowModel()

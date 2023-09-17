@@ -40,7 +40,7 @@ const TableFooter = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => (
-  <tfoot ref={ref} className={cn("[&_tr]:border-b", className)} {...props} />
+  <tfoot ref={ref} className={cn(className)} {...props} />
 ));
 TableFooter.displayName = "TableFooter";
 

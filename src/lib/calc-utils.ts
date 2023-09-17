@@ -54,7 +54,7 @@ export function calculateMortgageScheduleFixedInstallment(
         remainingPrincipal = 0;
       } else {
         remainingPrincipal -= principalPayment + additionalPayment;
-        principalPayment += additionalPayment;
+        // principalPayment += additionalPayment;
       }
     } else {
       remainingPrincipal -= principalPayment;
@@ -66,7 +66,7 @@ export function calculateMortgageScheduleFixedInstallment(
       principalPayment,
       additionalPayment: additionalPayment,
       interestPayment,
-      remainingPrincipal,
+      remainingPrincipal: remainingPrincipal >= 0 ? remainingPrincipal : 0,
     });
 
     month++;
@@ -103,7 +103,7 @@ export function calculateMortgageScheduleDecreasingInstallment(
       principalPayment,
       additionalPayment,
       interestPayment,
-      remainingPrincipal,
+      remainingPrincipal: remainingPrincipal >= 0 ? remainingPrincipal : 0,
     });
 
     month++;

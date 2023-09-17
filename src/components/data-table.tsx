@@ -33,11 +33,17 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
+    <div
+      className="flex flex-col h-100 overflow-hidden rounded-lg border"
+      style={{ maxHeight: "calc(100vh - 2rem" }}
+    >
+      <Table className="relative flex-grow overflow-auto">
+        <TableHeader className="sticky top-0 bg-card">
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <TableRow
+              key={headerGroup.id}
+              className="bg-muted/100 hover:bg-muted/100"
+            >
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHead key={header.id}>
@@ -75,9 +81,12 @@ export function DataTable<TData, TValue>({
             </TableRow>
           )}
         </TableBody>
-        <TableFooter>
+        <TableFooter className="sticky bottom-0 bg-card">
           {table.getFooterGroups().map((footerGroup) => (
-            <TableRow key={footerGroup.id}>
+            <TableRow
+              key={footerGroup.id}
+              className="bg-muted/100 hover:bg-muted/100 border-b-0"
+            >
               {footerGroup.headers.map((header) => (
                 <TableHead key={header.id}>
                   {header.isPlaceholder

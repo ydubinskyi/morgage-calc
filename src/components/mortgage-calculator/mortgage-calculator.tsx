@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { MortgageScheduleTable } from "../mortgage-schedule-table/mortgage-schedule-table";
-import { Button } from "../ui/button";
+import { MortgageSummarySection } from "../mortgage-summary-section/mortgage-summary-section";
 import {
   Card,
   CardContent,
@@ -31,6 +31,8 @@ export const MortgageCalculator = () => {
   const [mortgagePaymentsSchedule, setMortgagePaymentsSchedule] = useState<
     MortgageScheduleItem[]
   >([]);
+
+  const hasSchedule = mortgagePaymentsSchedule.length > 0;
 
   const onAdditionalPaymentChange = (month: number, value: number) => {
     setAdditionalPayments((prev) => ({
@@ -62,8 +64,7 @@ export const MortgageCalculator = () => {
           principal,
           annualInterestRate,
           loanTermInMonths,
-          additionalPayments,
-          7000
+          additionalPayments
         );
       } else {
         schedule = calculateMortgageScheduleDecreasingInstallment(
@@ -105,10 +106,17 @@ export const MortgageCalculator = () => {
         </CardFooter>
       </Card>
 
-      <MortgageScheduleTable
-        data={mortgagePaymentsSchedule}
-        onAdditionalPaymentChange={onAdditionalPaymentChange}
-      />
+      {hasSchedule && (
+        <>
+          <MortgageSummarySection
+            mortgagePaymentsSchedule={mortgagePaymentsSchedule}
+          />
+          <MortgageScheduleTable
+            data={mortgagePaymentsSchedule}
+            onAdditionalPaymentChange={onAdditionalPaymentChange}
+          />
+        </>
+      )}
     </div>
   );
 };
