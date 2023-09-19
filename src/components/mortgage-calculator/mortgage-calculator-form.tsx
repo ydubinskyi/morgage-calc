@@ -5,15 +5,7 @@ import * as z from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Button } from "../ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
-
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -23,7 +15,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { INSTALLMENT_TYPE, InstallmentType } from "@/types/mortgage";
+import { MonthPicker } from "@/components/ui/month-picker";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { INSTALLMENT_TYPE } from "@/types/mortgage";
 
 const mortgageArgsFormSchema = z.object({
   principal: z.number().min(1000),
@@ -33,6 +33,7 @@ const mortgageArgsFormSchema = z.object({
     INSTALLMENT_TYPE.Decreasing,
     INSTALLMENT_TYPE.Fixed,
   ]),
+  startDate: z.date(),
 });
 
 export type MortgageArgs = z.infer<typeof mortgageArgsFormSchema>;
@@ -51,6 +52,7 @@ export const MortgageCalculatorForm = ({
       annualInterestRate: 0.058,
       loanTermInMonths: 240,
       installmentType: INSTALLMENT_TYPE.Fixed,
+      startDate: new Date(),
     },
   });
 
@@ -63,7 +65,7 @@ export const MortgageCalculatorForm = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="flex flex-row gap-4">
+        <div className="grid grid-cols-4 gap-4">
           <FormField
             control={form.control}
             name="principal"
@@ -141,6 +143,23 @@ export const MortgageCalculatorForm = ({
                       </SelectItem>
                     </SelectContent>
                   </Select>
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="startDate"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Start date</FormLabel>
+                <FormControl>
+                  <MonthPicker
+                    selected={field.value}
+                    onChange={field.onChange}
+                  />
                 </FormControl>
 
                 <FormMessage />
