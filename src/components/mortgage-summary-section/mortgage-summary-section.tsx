@@ -10,10 +10,11 @@ import { MortgageScheduleItem } from "@/types/mortgage";
 
 type MortgageSummarySectionProps = {
   mortgagePaymentsSchedule: MortgageScheduleItem[];
+  pending?: boolean;
 };
 
 export const MortgageSummarySection = memo(
-  ({ mortgagePaymentsSchedule }: MortgageSummarySectionProps) => {
+  ({ mortgagePaymentsSchedule, pending }: MortgageSummarySectionProps) => {
     const totalPrincipalPayment = useMemo(
       () =>
         roundToFixedTwo(
@@ -62,7 +63,7 @@ export const MortgageSummarySection = memo(
     return (
       <>
         <div className="grid grid-cols-2 gap-6">
-          <Card className="p-6 mb-6">
+          <Card className="p-6 mb-6" pending={pending}>
             <PaymentStructureChart
               title="Total payments structure"
               principalPayment={totalPrincipalPayment}
@@ -70,7 +71,7 @@ export const MortgageSummarySection = memo(
               additionalPayment={totalAdditionalPayment}
             />
           </Card>
-          <Card className="p-6 mb-6">
+          <Card className="p-6 mb-6" pending={pending}>
             <PaymentStructureChart
               title="First monthly payment structure"
               principalPayment={firstPaymentPrincipalPayment}
@@ -80,7 +81,7 @@ export const MortgageSummarySection = memo(
           </Card>
         </div>
 
-        <Card className="p-6 mb-6">
+        <Card className="p-6 mb-6" pending={pending}>
           <PaymentsScheduleChart
             mortgagePaymentsSchedule={mortgagePaymentsSchedule}
           />

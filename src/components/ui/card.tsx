@@ -1,19 +1,31 @@
 import * as React from "react";
+import { Loader2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
 const Card = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
+  React.HTMLAttributes<HTMLDivElement> & {
+    disabled?: boolean;
+    pending?: boolean;
+  }
+>(({ className, disabled, pending, ...props }, ref) => (
   <div
     ref={ref}
     className={cn(
       "rounded-lg border bg-card text-card-foreground shadow-sm",
+      (disabled || pending) && "opacity-50 pointer-events-none relative",
       className
     )}
     {...props}
-  />
+  >
+    {props.children}
+    {pending && (
+      <div className="absolute top-0 left-0 w-full h-full grid place-items-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    )}
+  </div>
 ));
 Card.displayName = "Card";
 
