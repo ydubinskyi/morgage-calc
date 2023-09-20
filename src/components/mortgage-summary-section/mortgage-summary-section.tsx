@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 
 import { Card } from "../ui/card";
 import { PaymentStructureChart } from "./payment-structure-chart";
@@ -12,80 +12,82 @@ type MortgageSummarySectionProps = {
   mortgagePaymentsSchedule: MortgageScheduleItem[];
 };
 
-export const MortgageSummarySection = ({
-  mortgagePaymentsSchedule,
-}: MortgageSummarySectionProps) => {
-  const totalPrincipalPayment = useMemo(
-    () =>
-      roundToFixedTwo(
-        sumArrayOfNumbers(
-          mortgagePaymentsSchedule.map((item) => item.principalPayment)
-        )
-      ),
-    [mortgagePaymentsSchedule]
-  );
+export const MortgageSummarySection = memo(
+  ({ mortgagePaymentsSchedule }: MortgageSummarySectionProps) => {
+    const totalPrincipalPayment = useMemo(
+      () =>
+        roundToFixedTwo(
+          sumArrayOfNumbers(
+            mortgagePaymentsSchedule.map((item) => item.principalPayment)
+          )
+        ),
+      [mortgagePaymentsSchedule]
+    );
 
-  const totalInterestPayment = useMemo(
-    () =>
-      roundToFixedTwo(
-        sumArrayOfNumbers(
-          mortgagePaymentsSchedule.map((item) => item.interestPayment)
-        )
-      ),
-    [mortgagePaymentsSchedule]
-  );
+    const totalInterestPayment = useMemo(
+      () =>
+        roundToFixedTwo(
+          sumArrayOfNumbers(
+            mortgagePaymentsSchedule.map((item) => item.interestPayment)
+          )
+        ),
+      [mortgagePaymentsSchedule]
+    );
 
-  const totalAdditionalPayment = useMemo(
-    () =>
-      roundToFixedTwo(
-        sumArrayOfNumbers(
-          mortgagePaymentsSchedule.map((item) => item.additionalPayment)
-        )
-      ),
-    [mortgagePaymentsSchedule]
-  );
+    const totalAdditionalPayment = useMemo(
+      () =>
+        roundToFixedTwo(
+          sumArrayOfNumbers(
+            mortgagePaymentsSchedule.map((item) => item.additionalPayment)
+          )
+        ),
+      [mortgagePaymentsSchedule]
+    );
 
-  const firstPaymentPrincipalPayment =
-    mortgagePaymentsSchedule.length > 0
-      ? roundToFixedTwo(mortgagePaymentsSchedule[0].principalPayment)
-      : 0;
+    const firstPaymentPrincipalPayment =
+      mortgagePaymentsSchedule.length > 0
+        ? roundToFixedTwo(mortgagePaymentsSchedule[0].principalPayment)
+        : 0;
 
-  const firstPaymentInterestPayment =
-    mortgagePaymentsSchedule.length > 0
-      ? roundToFixedTwo(mortgagePaymentsSchedule[0].interestPayment)
-      : 0;
+    const firstPaymentInterestPayment =
+      mortgagePaymentsSchedule.length > 0
+        ? roundToFixedTwo(mortgagePaymentsSchedule[0].interestPayment)
+        : 0;
 
-  const firstPaymentAdditionalPayment =
-    mortgagePaymentsSchedule.length > 0
-      ? roundToFixedTwo(mortgagePaymentsSchedule[0].additionalPayment)
-      : 0;
+    const firstPaymentAdditionalPayment =
+      mortgagePaymentsSchedule.length > 0
+        ? roundToFixedTwo(mortgagePaymentsSchedule[0].additionalPayment)
+        : 0;
 
-  return (
-    <>
-      <div className="grid grid-cols-2 gap-6">
+    return (
+      <>
+        <div className="grid grid-cols-2 gap-6">
+          <Card className="p-6 mb-6">
+            <PaymentStructureChart
+              title="Total payments structure"
+              principalPayment={totalPrincipalPayment}
+              interestPayment={totalInterestPayment}
+              additionalPayment={totalAdditionalPayment}
+            />
+          </Card>
+          <Card className="p-6 mb-6">
+            <PaymentStructureChart
+              title="First monthly payment structure"
+              principalPayment={firstPaymentPrincipalPayment}
+              interestPayment={firstPaymentInterestPayment}
+              additionalPayment={firstPaymentAdditionalPayment}
+            />
+          </Card>
+        </div>
+
         <Card className="p-6 mb-6">
-          <PaymentStructureChart
-            title="Total payments structure"
-            principalPayment={totalPrincipalPayment}
-            interestPayment={totalInterestPayment}
-            additionalPayment={totalAdditionalPayment}
+          <PaymentsScheduleChart
+            mortgagePaymentsSchedule={mortgagePaymentsSchedule}
           />
         </Card>
-        <Card className="p-6 mb-6">
-          <PaymentStructureChart
-            title="First monthly payment structure"
-            principalPayment={firstPaymentPrincipalPayment}
-            interestPayment={firstPaymentInterestPayment}
-            additionalPayment={firstPaymentAdditionalPayment}
-          />
-        </Card>
-      </div>
+      </>
+    );
+  }
+);
 
-      <Card className="p-6 mb-6">
-        <PaymentsScheduleChart
-          mortgagePaymentsSchedule={mortgagePaymentsSchedule}
-        />
-      </Card>
-    </>
-  );
-};
+MortgageSummarySection.displayName = "MortgageSummarySection";

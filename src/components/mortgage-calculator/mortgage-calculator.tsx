@@ -18,14 +18,12 @@ import {
   MortgageCalculatorForm,
 } from "./mortgage-calculator-form";
 
-import {
-  calculateMortgageScheduleDecreasingInstallment,
-  calculateMortgageScheduleFixedInstallment,
-} from "@/lib/calc-utils";
+import { useCalcWorker } from "@/hooks/useCalcWorker";
 import { AdditionalPayments, MortgageScheduleItem } from "@/types/mortgage";
-import { MonthPicker } from "../ui/month-picker";
 
 export const MortgageCalculator = () => {
+  const calcWorkerApiRef = useCalcWorker();
+
   const [mortgageArgs, setMortgageArgs] = useState<MortgageArgs>();
   const [additionalPayments, setAdditionalPayments] =
     useState<AdditionalPayments>({});
@@ -38,12 +36,15 @@ export const MortgageCalculator = () => {
 
   const hasSchedule = mortgagePaymentsSchedule.length > 0;
 
-  const onAdditionalPaymentChange = (month: number, value: number) => {
-    setAdditionalPayments((prev) => ({
-      ...prev,
-      [month]: value ?? 0,
-    }));
-  };
+  const onAdditionalPaymentChange = useCallback(
+    (month: number, value: number) => {
+      setAdditionalPayments((prev) => ({
+        ...prev,
+        [month]: value ?? 0,
+      }));
+    },
+    []
+  );
 
   const onAddMultiAdditionalPayments = () => {
     const entries = Array.from(
@@ -54,7 +55,7 @@ export const MortgageCalculator = () => {
   };
 
   const calculateSchedule = useCallback(
-    (values: MortgageArgs) => {
+    async (values: MortgageArgs) => {
       const {
         installmentType,
         principal,
@@ -64,24 +65,26 @@ export const MortgageCalculator = () => {
       let schedule;
 
       if (installmentType === "Fixed") {
-        schedule = calculateMortgageScheduleFixedInstallment(
-          principal,
-          annualInterestRate,
-          loanTermInMonths,
-          deferredAdditionalPayments
-        );
+        schedule =
+          await calcWorkerApiRef.current?.calculateMortgageScheduleFixedInstallment(
+            principal,
+            annualInterestRate,
+            loanTermInMonths,
+            deferredAdditionalPayments
+          );
       } else {
-        schedule = calculateMortgageScheduleDecreasingInstallment(
-          principal,
-          annualInterestRate,
-          loanTermInMonths,
-          deferredAdditionalPayments
-        );
+        schedule =
+          await calcWorkerApiRef.current?.calculateMortgageScheduleDecreasingInstallment(
+            principal,
+            annualInterestRate,
+            loanTermInMonths,
+            deferredAdditionalPayments
+          );
       }
 
-      setMortgagePaymentsSchedule(schedule);
+      setMortgagePaymentsSchedule(schedule ?? []);
     },
-    [deferredAdditionalPayments]
+    [calcWorkerApiRef, deferredAdditionalPayments]
   );
 
   const onSubmit = (values: MortgageArgs) => {

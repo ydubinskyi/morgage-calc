@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 
 import { DataTable } from "../data-table";
@@ -78,15 +79,16 @@ type MortgageScheduleTableProps = {
   onAdditionalPaymentChange: (month: number, value: number) => void;
 };
 
-export const MortgageScheduleTable = ({
-  data,
-  onAdditionalPaymentChange,
-}: MortgageScheduleTableProps) => {
-  return (
-    <MortgageScheduleTableContext.Provider
-      value={{ onAdditionalPaymentChange }}
-    >
-      <DataTable columns={columns} data={data} />
-    </MortgageScheduleTableContext.Provider>
-  );
-};
+export const MortgageScheduleTable = memo(
+  ({ data, onAdditionalPaymentChange }: MortgageScheduleTableProps) => {
+    return (
+      <MortgageScheduleTableContext.Provider
+        value={{ onAdditionalPaymentChange }}
+      >
+        <DataTable columns={columns} data={data} />
+      </MortgageScheduleTableContext.Provider>
+    );
+  }
+);
+
+MortgageScheduleTable.displayName = "MortgageScheduleTable";
