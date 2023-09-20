@@ -1,3 +1,5 @@
+import { formatMoneyValue } from "./utils";
+
 import { AdditionalPayments, MortgageScheduleItem } from "@/types/mortgage";
 
 export const roundToFixedTwo = (num: number) =>
@@ -54,20 +56,21 @@ export function calculateMortgageScheduleFixedInstallment(
         remainingPrincipal = 0;
       } else {
         remainingPrincipal -= principalPayment + additionalPayment;
-        // principalPayment += additionalPayment;
       }
     } else {
       remainingPrincipal -= principalPayment;
     }
 
-    mortgageSchedule.push({
-      month,
-      payment: monthlyPayment + additionalPayment,
-      principalPayment,
-      additionalPayment: additionalPayment,
-      interestPayment,
-      remainingPrincipal: remainingPrincipal >= 0 ? remainingPrincipal : 0,
-    });
+    mortgageSchedule.push(
+      addFormattedValues({
+        month,
+        payment: monthlyPayment + additionalPayment,
+        principalPayment,
+        additionalPayment: additionalPayment,
+        interestPayment,
+        remainingPrincipal: remainingPrincipal >= 0 ? remainingPrincipal : 0,
+      })
+    );
 
     month++;
   }
@@ -97,17 +100,37 @@ export function calculateMortgageScheduleDecreasingInstallment(
 
     remainingPrincipal -= principalPayment + additionalPayment;
 
-    mortgageSchedule.push({
-      month,
-      payment: monthlyPayment,
-      principalPayment,
-      additionalPayment,
-      interestPayment,
-      remainingPrincipal: remainingPrincipal >= 0 ? remainingPrincipal : 0,
-    });
+    mortgageSchedule.push(
+      addFormattedValues({
+        month,
+        payment: monthlyPayment,
+        principalPayment,
+        additionalPayment,
+        interestPayment,
+        remainingPrincipal: remainingPrincipal >= 0 ? remainingPrincipal : 0,
+      })
+    );
 
     month++;
   }
 
   return mortgageSchedule;
 }
+
+const addFormattedValues = (
+  item: Omit<
+    MortgageScheduleItem,
+    | "fPayment"
+    | "fPrincipalPayment"
+    | "fAdditionalPayment"
+    | "fInterestPayment"
+    | "fRemainingPrincipal"
+  >
+) => ({
+  ...item,
+  fPayment: formatMoneyValue(item.payment),
+  fPrincipalPayment: formatMoneyValue(item.principalPayment),
+  fAdditionalPayment: formatMoneyValue(item.additionalPayment),
+  fInterestPayment: formatMoneyValue(item.interestPayment),
+  fRemainingPrincipal: formatMoneyValue(item.remainingPrincipal),
+});

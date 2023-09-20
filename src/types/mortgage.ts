@@ -1,10 +1,15 @@
 export type MortgageScheduleItem = {
   month: number;
   payment: number;
+  fPayment: string;
   principalPayment: number;
+  fPrincipalPayment: string;
   additionalPayment: number;
+  fAdditionalPayment: string;
   interestPayment: number;
+  fInterestPayment: string;
   remainingPrincipal: number;
+  fRemainingPrincipal: string;
 };
 
 export type AdditionalPayments = {

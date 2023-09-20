@@ -19,7 +19,7 @@ export const columns = [
   {
     accessorKey: "payment",
     header: "Payment",
-    cell: ({ row }) => formatMoneyValue(row.original.payment),
+    cell: ({ row }) => row.original.fPayment,
     footer: ({ table }) =>
       formatMoneyValue(
         sumArrayOfNumbers(
@@ -30,7 +30,7 @@ export const columns = [
   {
     accessorKey: "interestPayment",
     header: "Interest part",
-    cell: ({ row }) => formatMoneyValue(row.original.interestPayment),
+    cell: ({ row }) => row.original.fInterestPayment,
     footer: ({ table }) =>
       formatMoneyValue(
         sumArrayOfNumbers(
@@ -41,7 +41,7 @@ export const columns = [
   {
     accessorKey: "principalPayment",
     header: "Principal part",
-    cell: ({ row }) => formatMoneyValue(row.original.principalPayment),
+    cell: ({ row }) => row.original.fPrincipalPayment,
     footer: ({ table }) =>
       formatMoneyValue(
         sumArrayOfNumbers(
@@ -52,7 +52,7 @@ export const columns = [
   {
     accessorKey: "remainingPrincipal",
     header: "Remaining principal",
-    cell: ({ row }) => formatMoneyValue(row.original.remainingPrincipal),
+    cell: ({ row }) => row.original.fRemainingPrincipal,
   },
   {
     accessorKey: "additionalPayment",

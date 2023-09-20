@@ -57,8 +57,6 @@ export const MortgageCalculatorForm = ({
   });
 
   function onSubmit(values: MortgageArgs) {
-    console.log(values);
-
     handleSubmit(values);
   }
 
