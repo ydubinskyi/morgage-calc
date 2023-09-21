@@ -1,10 +1,13 @@
+import { format } from "date-fns";
+
+import { MortgageScheduleItem } from "@/types/mortgage";
+
 type PaymentNumberCellProps = {
-  month: number;
+  item: MortgageScheduleItem;
 };
 
-export const PaymentNumberCell = ({ month }: PaymentNumberCellProps) =>
-  month % 12 === 0 ? (
-    <span className="font-medium text-muted-foreground">{month / 12} year</span>
-  ) : (
-    month
-  );
+export const PaymentNumberCell = ({ item }: PaymentNumberCellProps) => (
+  <span className="font-medium text-muted-foreground">
+    {format(item.date, "LLL yy")}
+  </span>
+);

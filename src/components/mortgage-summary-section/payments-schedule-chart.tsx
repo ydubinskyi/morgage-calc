@@ -1,6 +1,6 @@
+import { format } from "date-fns";
 import {
   Bar,
-  BarChart,
   Brush,
   CartesianGrid,
   ComposedChart,
@@ -42,7 +42,11 @@ export const PaymentsScheduleChart = ({
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="month" name="Payment number" />
+          <XAxis
+            dataKey="date"
+            name="Payment number"
+            tickFormatter={(value: Date) => format(value, "LLL yy")}
+          />
           <YAxis
             yAxisId="left"
             orientation="left"
@@ -57,7 +61,7 @@ export const PaymentsScheduleChart = ({
           />
           <Tooltip content={(props) => <CustomTooltip {...props} />} />
           <Legend />
-          <Brush dataKey="month" height={20} stroke="#8884d8" />
+          <Brush dataKey="date" height={20} stroke="#8884d8" />
 
           <Bar
             yAxisId="left"
@@ -101,12 +105,16 @@ const CustomTooltip = ({
   if (active && payload && payload.length) {
     return (
       <div className="rounded-md bg-background border p-4">
-        <p className="text-muted-foreground">Payment number: {label}</p>
-        {payload.map((item) => (
-          <p key={item.name}>{`${item.name} : ${formatMoneyValue(
-            Number(item.value)
-          )}`}</p>
-        ))}
+        <p className="text-muted-foreground">
+          Payment date: {format(label, "LLL yyyy")}
+        </p>
+        {payload.map((item) =>
+          item.value ? (
+            <p key={item.name}>{`${item.name} : ${formatMoneyValue(
+              Number(item.value)
+            )}`}</p>
+          ) : null
+        )}
       </div>
     );
   }

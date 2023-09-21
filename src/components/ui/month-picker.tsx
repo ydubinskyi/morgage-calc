@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { DPDay, DPMonth, DPYear, useDatePicker } from "@rehookify/datepicker";
+import { DPMonth, useDatePicker } from "@rehookify/datepicker";
 import { format } from "date-fns";
 import { CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
 

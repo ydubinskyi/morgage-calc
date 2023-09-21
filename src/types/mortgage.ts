@@ -1,5 +1,6 @@
 export type MortgageScheduleItem = {
-  month: number;
+  date: Date;
+  paymentNumber: number;
   payment: number;
   fPayment: string;
   principalPayment: number;

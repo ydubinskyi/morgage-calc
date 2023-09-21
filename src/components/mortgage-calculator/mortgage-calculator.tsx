@@ -61,6 +61,7 @@ export const MortgageCalculator = () => {
         principal,
         annualInterestRate,
         loanTermInMonths,
+        startDate,
       } = values;
       let schedule;
 
@@ -70,7 +71,9 @@ export const MortgageCalculator = () => {
             principal,
             annualInterestRate,
             loanTermInMonths,
-            deferredAdditionalPayments
+            deferredAdditionalPayments,
+            0,
+            startDate
           );
       } else {
         schedule =
@@ -78,7 +81,8 @@ export const MortgageCalculator = () => {
             principal,
             annualInterestRate,
             loanTermInMonths,
-            deferredAdditionalPayments
+            deferredAdditionalPayments,
+            startDate
           );
       }
 

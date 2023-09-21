@@ -73,7 +73,7 @@ export const MortgageSummarySection = memo(
           </Card>
           <Card className="p-6 mb-6" pending={pending}>
             <PaymentStructureChart
-              title="First monthly payment structure"
+              title="First payment structure"
               principalPayment={firstPaymentPrincipalPayment}
               interestPayment={firstPaymentInterestPayment}
               additionalPayment={firstPaymentAdditionalPayment}

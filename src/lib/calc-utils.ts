@@ -1,3 +1,5 @@
+import { addMonths } from "date-fns";
+
 import { formatMoneyValue } from "./utils";
 
 import { AdditionalPayments, MortgageScheduleItem } from "@/types/mortgage";
@@ -23,21 +25,23 @@ export function calculateMortgageScheduleFixedInstallment(
   annualInterestRate: number,
   loanTermInMonths: number,
   additionalPayments: AdditionalPayments = {},
-  desiredMonthlyPayment: number = 0
+  desiredMonthlyPayment: number = 0,
+  startingDate: Date = new Date()
 ): MortgageScheduleItem[] {
   const mortgageSchedule: MortgageScheduleItem[] = [];
   const monthlyInterestRate = annualInterestRate / 12;
   let remainingPrincipal = principal;
-  let month = 1;
+  let paymentNumber = 1;
 
-  while (remainingPrincipal > 0 && month <= loanTermInMonths) {
+  while (remainingPrincipal > 0 && paymentNumber <= loanTermInMonths) {
     const monthlyPayment = calculateMonthlyPaymentForFixedInstallment(
       remainingPrincipal,
       monthlyInterestRate,
-      loanTermInMonths - month + 1
+      loanTermInMonths - paymentNumber + 1
     );
 
-    const userProvidedAdditionalPayment = additionalPayments[month] || 0;
+    const userProvidedAdditionalPayment =
+      additionalPayments[paymentNumber] || 0;
 
     const desiredPaymentAdditionalPart =
       desiredMonthlyPayment > monthlyPayment
@@ -63,7 +67,8 @@ export function calculateMortgageScheduleFixedInstallment(
 
     mortgageSchedule.push(
       addFormattedValues({
-        month,
+        paymentNumber,
+        date: addMonths(startingDate, paymentNumber - 1),
         payment: monthlyPayment + additionalPayment,
         principalPayment,
         additionalPayment: additionalPayment,
@@ -72,7 +77,7 @@ export function calculateMortgageScheduleFixedInstallment(
       })
     );
 
-    month++;
+    paymentNumber++;
   }
 
   return mortgageSchedule;
@@ -82,28 +87,29 @@ export function calculateMortgageScheduleDecreasingInstallment(
   principal: number,
   annualInterestRate: number,
   loanTermInMonths: number,
-  additionalPayments: AdditionalPayments = {}
+  additionalPayments: AdditionalPayments = {},
+  startingDate: Date = new Date()
 ) {
   const mortgageSchedule: MortgageScheduleItem[] = [];
   const monthlyInterestRate = annualInterestRate / 12;
   const basePrincipalPayment = principal / loanTermInMonths;
 
   let remainingPrincipal = principal;
-  let month = 1;
+  let paymentNumber = 1;
 
-  while (remainingPrincipal > 0 && month <= loanTermInMonths) {
-    const additionalPayment = additionalPayments[month] || 0;
+  while (remainingPrincipal > 0 && paymentNumber <= loanTermInMonths) {
+    const additionalPayment = additionalPayments[paymentNumber] || 0;
 
     const principalPayment = basePrincipalPayment + additionalPayment;
     const interestPayment = remainingPrincipal * monthlyInterestRate;
-    const monthlyPayment = principalPayment + interestPayment;
 
-    remainingPrincipal -= principalPayment + additionalPayment;
+    remainingPrincipal -= principalPayment;
 
     mortgageSchedule.push(
       addFormattedValues({
-        month,
-        payment: monthlyPayment,
+        paymentNumber,
+        date: addMonths(startingDate, paymentNumber - 1),
+        payment: principalPayment + interestPayment,
         principalPayment,
         additionalPayment,
         interestPayment,
@@ -111,7 +117,7 @@ export function calculateMortgageScheduleDecreasingInstallment(
       })
     );
 
-    month++;
+    paymentNumber++;
   }
 
   return mortgageSchedule;

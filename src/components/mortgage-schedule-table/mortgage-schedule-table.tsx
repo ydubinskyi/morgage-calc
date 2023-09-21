@@ -2,19 +2,20 @@ import { memo } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 
 import { DataTable } from "../data-table";
+import { ColorPointTitle } from "../ui/color-point-title";
 import { AdditionalPaymentCell } from "./additional-payment-cell";
 import { MortgageScheduleTableContext } from "./mortgage-schedule-table-context";
 import { PaymentNumberCell } from "./payment-number-cell";
 
 import { formatMoneyValue, sumArrayOfNumbers } from "@/lib/utils";
-import { MortgageScheduleItem } from "@/types/mortgage";
+import { MortgageScheduleItem, PAYMENT_PART_COLOR } from "@/types/mortgage";
 
 export const columns = [
   {
-    accessorKey: "month",
-    header: "Month",
+    accessorKey: "date",
+    header: "Date",
     footer: "Total",
-    cell: ({ row }) => <PaymentNumberCell month={row.original.month} />,
+    cell: ({ row }) => <PaymentNumberCell item={row.original} />,
   },
   {
     accessorKey: "payment",
@@ -29,7 +30,9 @@ export const columns = [
   },
   {
     accessorKey: "interestPayment",
-    header: "Interest part",
+    header: () => (
+      <ColorPointTitle title="Interest" color={PAYMENT_PART_COLOR.Interest} />
+    ),
     cell: ({ row }) => row.original.fInterestPayment,
     footer: ({ table }) =>
       formatMoneyValue(
@@ -40,7 +43,9 @@ export const columns = [
   },
   {
     accessorKey: "principalPayment",
-    header: "Principal part",
+    header: () => (
+      <ColorPointTitle title="Principal" color={PAYMENT_PART_COLOR.Principal} />
+    ),
     cell: ({ row }) => row.original.fPrincipalPayment,
     footer: ({ table }) =>
       formatMoneyValue(
@@ -56,10 +61,15 @@ export const columns = [
   },
   {
     accessorKey: "additionalPayment",
-    header: "Additional payment",
+    header: () => (
+      <ColorPointTitle
+        title="Additional payment"
+        color={PAYMENT_PART_COLOR.Additional}
+      />
+    ),
     cell: ({ row }) => (
       <AdditionalPaymentCell
-        month={row.original.month}
+        month={row.original.paymentNumber}
         value={row.original.additionalPayment}
       />
     ),
