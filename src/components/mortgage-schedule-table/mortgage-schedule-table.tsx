@@ -69,7 +69,7 @@ export const columns = [
     ),
     cell: ({ row }) => (
       <AdditionalPaymentCell
-        month={row.original.paymentNumber}
+        paymentNumber={row.original.paymentNumber}
         value={row.original.additionalPayment}
       />
     ),

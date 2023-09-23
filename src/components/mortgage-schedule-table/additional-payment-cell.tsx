@@ -4,18 +4,20 @@ import { Input } from "../ui/input";
 import { useMortgageScheduleTableContext } from "./mortgage-schedule-table-context";
 
 type AdditionalPaymentCellProps = {
-  month: number;
+  paymentNumber: number;
   value: number;
 };
 
 export const AdditionalPaymentCell = memo(
-  ({ month, value }: AdditionalPaymentCellProps) => {
+  ({ paymentNumber, value }: AdditionalPaymentCellProps) => {
     const { onAdditionalPaymentChange } = useMortgageScheduleTableContext();
     return (
       <Input
+        key={value}
+        type="number"
         defaultValue={value}
         onChange={(e) =>
-          onAdditionalPaymentChange(month, Number(e.target.value) ?? 0)
+          onAdditionalPaymentChange(paymentNumber, e.target.valueAsNumber ?? 0)
         }
       />
     );

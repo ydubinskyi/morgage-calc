@@ -5,13 +5,7 @@ import { useDebounce } from "use-debounce";
 
 import { MortgageScheduleTable } from "../mortgage-schedule-table/mortgage-schedule-table";
 import { MortgageSummarySection } from "../mortgage-summary-section/mortgage-summary-section";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { AdditionalPaymentsDialog } from "./additional-payments-dialog";
 import {
   MortgageArgs,
@@ -37,22 +31,24 @@ export const MortgageCalculator = () => {
   const hasSchedule = mortgagePaymentsSchedule.length > 0;
 
   const onAdditionalPaymentChange = useCallback(
-    (month: number, value: number) => {
+    (paymentNumber: number, value: number) => {
       setAdditionalPayments((prev) => ({
         ...prev,
-        [month]: value ?? 0,
+        [paymentNumber]: value ?? 0,
       }));
     },
     []
   );
 
-  const onAddMultiAdditionalPayments = () => {
-    const entries = Array.from(
-      { length: mortgageArgs?.loanTermInMonths ?? 0 },
-      (_, i) => i + 1
-    ).map((item) => [item, 4000]);
-    setAdditionalPayments(() => Object.fromEntries(entries));
-  };
+  const onBulkAdditionalPaymentsChange = useCallback(
+    (values: Record<number, number>) => {
+      setAdditionalPayments((prev) => ({
+        ...prev,
+        ...values,
+      }));
+    },
+    []
+  );
 
   const calculateSchedule = useCallback(
     async (values: MortgageArgs) => {
@@ -110,11 +106,21 @@ export const MortgageCalculator = () => {
           <CardTitle>Mortgage calculator</CardTitle>
         </CardHeader>
         <CardContent>
-          <MortgageCalculatorForm onSubmit={onSubmit} />
+          <MortgageCalculatorForm onSubmit={onSubmit}>
+            {mortgageArgs && (
+              <AdditionalPaymentsDialog
+                startDate={mortgageArgs?.startDate}
+                loanTermInMonths={
+                  mortgageArgs?.loanTermInMonths >
+                  mortgagePaymentsSchedule.length
+                    ? mortgageArgs?.loanTermInMonths
+                    : mortgagePaymentsSchedule.length
+                }
+                onAdditionalPaymentsChange={onBulkAdditionalPaymentsChange}
+              />
+            )}
+          </MortgageCalculatorForm>
         </CardContent>
-        <CardFooter>
-          <AdditionalPaymentsDialog />
-        </CardFooter>
       </Card>
 
       {hasSchedule && (

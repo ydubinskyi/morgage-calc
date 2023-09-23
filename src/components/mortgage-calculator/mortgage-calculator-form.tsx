@@ -1,5 +1,6 @@
 "use client";
 
+import { PropsWithChildren } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
@@ -38,11 +39,12 @@ const mortgageArgsFormSchema = z.object({
 
 export type MortgageArgs = z.infer<typeof mortgageArgsFormSchema>;
 
-type MortgageCalculatorFormProps = {
+type MortgageCalculatorFormProps = PropsWithChildren & {
   onSubmit: (values: MortgageArgs) => void;
 };
 
 export const MortgageCalculatorForm = ({
+  children,
   onSubmit: handleSubmit,
 }: MortgageCalculatorFormProps) => {
   const form = useForm<MortgageArgs>({
@@ -165,7 +167,11 @@ export const MortgageCalculatorForm = ({
             )}
           />
         </div>
-        <Button type="submit">Submit</Button>
+        <div className="flex justify-between">
+          <Button type="submit">Submit</Button>
+
+          {children}
+        </div>
       </form>
     </Form>
   );

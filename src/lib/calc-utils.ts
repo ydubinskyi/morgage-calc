@@ -48,7 +48,7 @@ export function calculateMortgageScheduleFixedInstallment(
         ? roundToFixedTwo(desiredMonthlyPayment - monthlyPayment)
         : 0;
 
-    const additionalPayment =
+    let additionalPayment =
       userProvidedAdditionalPayment || desiredPaymentAdditionalPart;
 
     let interestPayment = remainingPrincipal * monthlyInterestRate;
@@ -58,6 +58,7 @@ export function calculateMortgageScheduleFixedInstallment(
       if (principalPayment + additionalPayment > remainingPrincipal) {
         principalPayment = remainingPrincipal;
         remainingPrincipal = 0;
+        additionalPayment = 0;
       } else {
         remainingPrincipal -= principalPayment + additionalPayment;
       }
@@ -98,19 +99,29 @@ export function calculateMortgageScheduleDecreasingInstallment(
   let paymentNumber = 1;
 
   while (remainingPrincipal > 0 && paymentNumber <= loanTermInMonths) {
-    const additionalPayment = additionalPayments[paymentNumber] || 0;
+    let additionalPayment = additionalPayments[paymentNumber] || 0;
 
-    const principalPayment = basePrincipalPayment + additionalPayment;
-    const interestPayment = remainingPrincipal * monthlyInterestRate;
+    let principalPayment = basePrincipalPayment;
+    let interestPayment = remainingPrincipal * monthlyInterestRate;
 
-    remainingPrincipal -= principalPayment;
+    if (additionalPayment) {
+      if (principalPayment + additionalPayment > remainingPrincipal) {
+        principalPayment = remainingPrincipal;
+        remainingPrincipal = 0;
+        additionalPayment = 0;
+      } else {
+        remainingPrincipal -= principalPayment + additionalPayment;
+      }
+    } else {
+      remainingPrincipal -= principalPayment;
+    }
 
     mortgageSchedule.push(
       addFormattedValues({
         paymentNumber,
         date: addMonths(startingDate, paymentNumber - 1),
-        payment: principalPayment + interestPayment,
-        principalPayment,
+        payment: principalPayment + interestPayment + additionalPayment,
+        principalPayment: principalPayment,
         additionalPayment,
         interestPayment,
         remainingPrincipal: remainingPrincipal >= 0 ? remainingPrincipal : 0,
