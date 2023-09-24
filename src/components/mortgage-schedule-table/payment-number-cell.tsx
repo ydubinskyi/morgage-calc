@@ -7,7 +7,8 @@ type PaymentNumberCellProps = {
 };
 
 export const PaymentNumberCell = ({ item }: PaymentNumberCellProps) => (
-  <span className="font-medium text-muted-foreground">
+  <span className="text-muted-foreground">
+    <span className="font-medium">#{item.paymentNumber}</span>{" "}
     {format(item.date, "LLL yy")}
   </span>
 );

@@ -3,7 +3,6 @@ import { ColumnDef } from "@tanstack/react-table";
 
 import { DataTable } from "../data-table";
 import { ColorPointTitle } from "../ui/color-point-title";
-import { AdditionalPaymentCell } from "./additional-payment-cell";
 import { MortgageScheduleTableContext } from "./mortgage-schedule-table-context";
 import { PaymentNumberCell } from "./payment-number-cell";
 
@@ -55,11 +54,6 @@ export const columns = [
       ),
   },
   {
-    accessorKey: "remainingPrincipal",
-    header: "Remaining principal",
-    cell: ({ row }) => row.original.fRemainingPrincipal,
-  },
-  {
     accessorKey: "additionalPayment",
     header: () => (
       <ColorPointTitle
@@ -67,12 +61,7 @@ export const columns = [
         color={PAYMENT_PART_COLOR.Additional}
       />
     ),
-    cell: ({ row }) => (
-      <AdditionalPaymentCell
-        paymentNumber={row.original.paymentNumber}
-        value={row.original.additionalPayment}
-      />
-    ),
+    cell: ({ row }) => row.original.fAdditionalPayment,
     footer: ({ table }) =>
       formatMoneyValue(
         sumArrayOfNumbers(
@@ -81,6 +70,11 @@ export const columns = [
             .rows.map((item) => item.original.additionalPayment)
         )
       ),
+  },
+  {
+    accessorKey: "remainingPrincipal",
+    header: "Remaining principal",
+    cell: ({ row }) => row.original.fRemainingPrincipal,
   },
 ] as ColumnDef<MortgageScheduleItem>[];
 

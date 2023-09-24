@@ -32,16 +32,18 @@ export const MortgageCalculator = () => {
 
   const onAdditionalPaymentChange = useCallback(
     (paymentNumber: number, value: number) => {
-      setAdditionalPayments((prev) => ({
-        ...prev,
-        [paymentNumber]: value ?? 0,
-      }));
+      // setAdditionalPayments((prev) => ({
+      //   ...prev,
+      //   [paymentNumber]: {
+      //     value,
+      //   },
+      // }));
     },
     []
   );
 
   const onBulkAdditionalPaymentsChange = useCallback(
-    (values: Record<number, number>) => {
+    (values: AdditionalPayments) => {
       setAdditionalPayments((prev) => ({
         ...prev,
         ...values,
@@ -58,27 +60,31 @@ export const MortgageCalculator = () => {
         annualInterestRate,
         loanTermInMonths,
         startDate,
+        overpaymentEffect,
       } = values;
       let schedule;
 
       if (installmentType === "Fixed") {
         schedule =
           await calcWorkerApiRef.current?.calculateMortgageScheduleFixedInstallment(
-            principal,
-            annualInterestRate,
-            loanTermInMonths,
-            deferredAdditionalPayments,
-            0,
-            startDate
+            {
+              principal,
+              annualInterestRate,
+              loanTermInMonths,
+              additionalPayments: deferredAdditionalPayments,
+              startingDate: startDate,
+            }
           );
       } else {
         schedule =
           await calcWorkerApiRef.current?.calculateMortgageScheduleDecreasingInstallment(
-            principal,
-            annualInterestRate,
-            loanTermInMonths,
-            deferredAdditionalPayments,
-            startDate
+            {
+              principal,
+              annualInterestRate,
+              loanTermInMonths,
+              additionalPayments: deferredAdditionalPayments,
+              startingDate: startDate,
+            }
           );
       }
 

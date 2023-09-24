@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { INSTALLMENT_TYPE } from "@/types/mortgage";
+import { INSTALLMENT_TYPE, OVERPAYMENT_EFFECT } from "@/types/mortgage";
 
 const mortgageArgsFormSchema = z.object({
   principal: z.number().min(1000),
@@ -33,6 +33,10 @@ const mortgageArgsFormSchema = z.object({
   installmentType: z.enum([
     INSTALLMENT_TYPE.Decreasing,
     INSTALLMENT_TYPE.Fixed,
+  ]),
+  overpaymentEffect: z.enum([
+    OVERPAYMENT_EFFECT.LowerInstallment,
+    OVERPAYMENT_EFFECT.ShortenedLoanTerm,
   ]),
   startDate: z.date(),
 });
@@ -54,6 +58,7 @@ export const MortgageCalculatorForm = ({
       annualInterestRate: 0.058,
       loanTermInMonths: 240,
       installmentType: INSTALLMENT_TYPE.Fixed,
+      overpaymentEffect: OVERPAYMENT_EFFECT.LowerInstallment,
       startDate: new Date(),
     },
   });
@@ -140,6 +145,35 @@ export const MortgageCalculatorForm = ({
                       </SelectItem>
                       <SelectItem value={INSTALLMENT_TYPE.Decreasing}>
                         Decreasing
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="overpaymentEffect"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Overpayment effect</FormLabel>
+                <FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select overpayment effect" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={OVERPAYMENT_EFFECT.LowerInstallment}>
+                        Lower installment
+                      </SelectItem>
+                      <SelectItem value={OVERPAYMENT_EFFECT.ShortenedLoanTerm}>
+                        Shortened loan period
                       </SelectItem>
                     </SelectContent>
                   </Select>

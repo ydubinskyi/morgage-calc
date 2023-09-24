@@ -1,5 +1,6 @@
 export type MortgageScheduleItem = {
   date: Date;
+  year: number;
   paymentNumber: number;
   payment: number;
   fPayment: string;
@@ -14,7 +15,18 @@ export type MortgageScheduleItem = {
 };
 
 export type AdditionalPayments = {
-  [month: number]: number;
+  [paymentNumber: number]: {
+    value: number;
+    overpaymentEffect: OverpaymentEffectType;
+  };
+};
+
+export type CalcMortgageScheduleArgs = {
+  principal: number;
+  annualInterestRate: number;
+  loanTermInMonths: number;
+  additionalPayments: AdditionalPayments;
+  startingDate: Date;
 };
 
 export const INSTALLMENT_TYPE = {
@@ -23,6 +35,13 @@ export const INSTALLMENT_TYPE = {
 } as const;
 
 export type InstallmentType = keyof typeof INSTALLMENT_TYPE;
+
+export const OVERPAYMENT_EFFECT = {
+  LowerInstallment: "LowerInstallment",
+  ShortenedLoanTerm: "ShortenedLoanTerm",
+} as const;
+
+export type OverpaymentEffectType = keyof typeof OVERPAYMENT_EFFECT;
 
 export const PAYMENT_PART_COLOR = {
   Principal: "#4caf50",

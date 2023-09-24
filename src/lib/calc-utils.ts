@@ -1,8 +1,11 @@
-import { addMonths } from "date-fns";
+import { addMonths, getYear } from "date-fns";
 
 import { formatMoneyValue } from "./utils";
 
-import { AdditionalPayments, MortgageScheduleItem } from "@/types/mortgage";
+import {
+  CalcMortgageScheduleArgs,
+  MortgageScheduleItem,
+} from "@/types/mortgage";
 
 export const roundToFixedTwo = (num: number) =>
   Math.round((num + Number.EPSILON) * 100) / 100;
@@ -20,14 +23,13 @@ export function calculateMonthlyPaymentForFixedInstallment(
   );
 }
 
-export function calculateMortgageScheduleFixedInstallment(
-  principal: number,
-  annualInterestRate: number,
-  loanTermInMonths: number,
-  additionalPayments: AdditionalPayments = {},
-  desiredMonthlyPayment: number = 0,
-  startingDate: Date = new Date()
-): MortgageScheduleItem[] {
+export function calculateMortgageScheduleFixedInstallment({
+  principal,
+  annualInterestRate,
+  loanTermInMonths,
+  additionalPayments,
+  startingDate,
+}: CalcMortgageScheduleArgs): MortgageScheduleItem[] {
   const mortgageSchedule: MortgageScheduleItem[] = [];
   const monthlyInterestRate = annualInterestRate / 12;
   let remainingPrincipal = principal;
@@ -41,24 +43,19 @@ export function calculateMortgageScheduleFixedInstallment(
     );
 
     const userProvidedAdditionalPayment =
-      additionalPayments[paymentNumber] || 0;
+      additionalPayments[paymentNumber]?.value || 0;
 
-    const desiredPaymentAdditionalPart =
-      desiredMonthlyPayment > monthlyPayment
-        ? roundToFixedTwo(desiredMonthlyPayment - monthlyPayment)
-        : 0;
-
-    let additionalPayment =
-      userProvidedAdditionalPayment || desiredPaymentAdditionalPart;
+    let additionalPayment = userProvidedAdditionalPayment;
 
     let interestPayment = remainingPrincipal * monthlyInterestRate;
     let principalPayment = monthlyPayment - interestPayment;
 
     if (additionalPayment) {
       if (principalPayment + additionalPayment > remainingPrincipal) {
-        principalPayment = remainingPrincipal;
+        additionalPayment = roundToFixedTwo(
+          remainingPrincipal - principalPayment
+        );
         remainingPrincipal = 0;
-        additionalPayment = 0;
       } else {
         remainingPrincipal -= principalPayment + additionalPayment;
       }
@@ -66,11 +63,14 @@ export function calculateMortgageScheduleFixedInstallment(
       remainingPrincipal -= principalPayment;
     }
 
+    const date = addMonths(startingDate, paymentNumber - 1);
+
     mortgageSchedule.push(
       addFormattedValues({
         paymentNumber,
-        date: addMonths(startingDate, paymentNumber - 1),
-        payment: monthlyPayment + additionalPayment,
+        date,
+        year: getYear(date),
+        payment: principalPayment + interestPayment + additionalPayment,
         principalPayment,
         additionalPayment: additionalPayment,
         interestPayment,
@@ -84,13 +84,13 @@ export function calculateMortgageScheduleFixedInstallment(
   return mortgageSchedule;
 }
 
-export function calculateMortgageScheduleDecreasingInstallment(
-  principal: number,
-  annualInterestRate: number,
-  loanTermInMonths: number,
-  additionalPayments: AdditionalPayments = {},
-  startingDate: Date = new Date()
-) {
+export function calculateMortgageScheduleDecreasingInstallment({
+  principal,
+  annualInterestRate,
+  loanTermInMonths,
+  additionalPayments,
+  startingDate,
+}: CalcMortgageScheduleArgs) {
   const mortgageSchedule: MortgageScheduleItem[] = [];
   const monthlyInterestRate = annualInterestRate / 12;
   const basePrincipalPayment = principal / loanTermInMonths;
@@ -99,7 +99,7 @@ export function calculateMortgageScheduleDecreasingInstallment(
   let paymentNumber = 1;
 
   while (remainingPrincipal > 0 && paymentNumber <= loanTermInMonths) {
-    let additionalPayment = additionalPayments[paymentNumber] || 0;
+    let additionalPayment = additionalPayments[paymentNumber]?.value || 0;
 
     let principalPayment = basePrincipalPayment;
     let interestPayment = remainingPrincipal * monthlyInterestRate;
@@ -116,10 +116,13 @@ export function calculateMortgageScheduleDecreasingInstallment(
       remainingPrincipal -= principalPayment;
     }
 
+    const date = addMonths(startingDate, paymentNumber - 1);
+
     mortgageSchedule.push(
       addFormattedValues({
         paymentNumber,
-        date: addMonths(startingDate, paymentNumber - 1),
+        date,
+        year: getYear(date),
         payment: principalPayment + interestPayment + additionalPayment,
         principalPayment: principalPayment,
         additionalPayment,

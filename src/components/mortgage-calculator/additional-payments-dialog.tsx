@@ -26,6 +26,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { MonthPicker } from "@/components/ui/month-picker";
 import { range } from "@/lib/utils";
+import { AdditionalPayments, OVERPAYMENT_EFFECT } from "@/types/mortgage";
 
 const additionalPaymentsFormSchema = z.object({
   dateFrom: z.date(),
@@ -38,7 +39,7 @@ type AdditionalPaymentsArgs = z.infer<typeof additionalPaymentsFormSchema>;
 type AdditionalPaymentsDialogProps = {
   startDate: Date;
   loanTermInMonths: number;
-  onAdditionalPaymentsChange: (values: Record<number, number>) => void;
+  onAdditionalPaymentsChange: (values: AdditionalPayments) => void;
 };
 
 export const AdditionalPaymentsDialog = memo(
@@ -80,7 +81,10 @@ export const AdditionalPaymentsDialog = memo(
           Object.fromEntries(
             range(startPaymentNumber, endPaymentNumber + 1).map((n) => [
               n,
-              value,
+              {
+                value,
+                overpaymentEffect: OVERPAYMENT_EFFECT.LowerInstallment,
+              },
             ])
           )
         );
