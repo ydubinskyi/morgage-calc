@@ -103,7 +103,7 @@ export const AdditionalPaymentsDialog = memo(
           <DialogHeader>
             <DialogTitle>Add additional payments</DialogTitle>
             <DialogDescription>
-              Add additional payments for all payments
+              Add additional payments for selected period
             </DialogDescription>
           </DialogHeader>
 
