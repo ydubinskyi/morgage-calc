@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { useDebounce } from "use-debounce";
 
 import { MortgageScheduleTable } from "../mortgage-schedule-table/mortgage-schedule-table";
@@ -16,6 +17,8 @@ import { useCalcWorker } from "@/hooks/useCalcWorker";
 import { AdditionalPayments, MortgageScheduleItem } from "@/types/mortgage";
 
 export const MortgageCalculator = () => {
+  const t = useTranslations("mortgage-calculator");
+
   const calcWorkerApiRef = useCalcWorker();
 
   const [mortgageArgs, setMortgageArgs] = useState<MortgageArgs>();
@@ -108,7 +111,7 @@ export const MortgageCalculator = () => {
     <div className="w-full">
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>Mortgage calculator</CardTitle>
+          <CardTitle>{t("title")}</CardTitle>
         </CardHeader>
         <CardContent>
           <MortgageCalculatorForm onSubmit={onSubmit}>
