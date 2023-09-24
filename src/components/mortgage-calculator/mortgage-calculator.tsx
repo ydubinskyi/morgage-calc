@@ -60,7 +60,6 @@ export const MortgageCalculator = () => {
         annualInterestRate,
         loanTermInMonths,
         startDate,
-        overpaymentEffect,
       } = values;
       let schedule;
 
