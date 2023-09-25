@@ -1,4 +1,5 @@
 import { memo, useMemo } from "react";
+import { useTranslations } from "next-intl";
 
 import { Card } from "../ui/card";
 import { PaymentStructureChart } from "./payment-structure-chart";
@@ -15,6 +16,8 @@ type MortgageSummarySectionProps = {
 
 export const MortgageSummarySection = memo(
   ({ mortgagePaymentsSchedule, pending }: MortgageSummarySectionProps) => {
+    const t = useTranslations("mortgage-calculator");
+
     const totalPrincipalPayment = useMemo(
       () =>
         roundToFixedTwo(
@@ -65,7 +68,7 @@ export const MortgageSummarySection = memo(
         <div className="grid grid-cols-2 gap-6">
           <Card className="p-6 mb-6" pending={pending}>
             <PaymentStructureChart
-              title="Total payments structure"
+              title={t("totalPaymentsStructureTitle")}
               principalPayment={totalPrincipalPayment}
               interestPayment={totalInterestPayment}
               additionalPayment={totalAdditionalPayment}
@@ -73,7 +76,7 @@ export const MortgageSummarySection = memo(
           </Card>
           <Card className="p-6 mb-6" pending={pending}>
             <PaymentStructureChart
-              title="First payment structure"
+              title={t("firstPaymentStructureTitle")}
               principalPayment={firstPaymentPrincipalPayment}
               interestPayment={firstPaymentInterestPayment}
               additionalPayment={firstPaymentAdditionalPayment}

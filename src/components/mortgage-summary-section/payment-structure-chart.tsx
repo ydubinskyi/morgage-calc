@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import {
   Cell,
   Pie,
@@ -34,27 +36,32 @@ export const PaymentStructureChart = ({
   interestPayment,
   additionalPayment = 0,
 }: TotalPaymentsStructureChartProps) => {
-  const data = [
-    {
-      name: "Principal",
-      value: principalPayment,
-      color: PAYMENT_PART_COLOR.Principal,
-    },
-    {
-      name: "Interest",
-      value: interestPayment,
-      color: PAYMENT_PART_COLOR.Interest,
-    },
-    ...(additionalPayment
-      ? [
-          {
-            name: "Additional",
-            value: additionalPayment,
-            color: PAYMENT_PART_COLOR.Additional,
-          },
-        ]
-      : []),
-  ];
+  const t = useTranslations("mortgage-calculator");
+
+  const data = useMemo(
+    () => [
+      {
+        name: t("columns.principal"),
+        value: principalPayment,
+        color: PAYMENT_PART_COLOR.Principal,
+      },
+      {
+        name: t("columns.interest"),
+        value: interestPayment,
+        color: PAYMENT_PART_COLOR.Interest,
+      },
+      ...(additionalPayment
+        ? [
+            {
+              name: t("columns.additionalPayment"),
+              value: additionalPayment,
+              color: PAYMENT_PART_COLOR.Additional,
+            },
+          ]
+        : []),
+    ],
+    [t, principalPayment, interestPayment, additionalPayment]
+  );
 
   return (
     <div className="flex flex-col space-y-6">
@@ -78,7 +85,7 @@ export const PaymentStructureChart = ({
           </TableBody>
           <TableFooter>
             <TableRow className="hover:bg-transparent border-t border-b-0">
-              <TableHead>Total</TableHead>
+              <TableHead>{t("columns.total")}</TableHead>
               <TableHead className="text-right">
                 {formatMoneyValue(
                   principalPayment + interestPayment + additionalPayment

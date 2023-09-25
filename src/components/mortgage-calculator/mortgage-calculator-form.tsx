@@ -2,6 +2,7 @@
 
 import { PropsWithChildren } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslations } from "next-intl";
 import * as z from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -47,6 +48,8 @@ export const MortgageCalculatorForm = ({
   children,
   onSubmit: handleSubmit,
 }: MortgageCalculatorFormProps) => {
+  const t = useTranslations("mortgage-calculator");
+
   const form = useForm<MortgageArgs>({
     resolver: zodResolver(mortgageArgsFormSchema),
     defaultValues: {
@@ -71,7 +74,7 @@ export const MortgageCalculatorForm = ({
             name="principal"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Principal</FormLabel>
+                <FormLabel>{t("form.loanAmount")}</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
@@ -89,7 +92,7 @@ export const MortgageCalculatorForm = ({
             name="annualInterestRate"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Annual interest rate</FormLabel>
+                <FormLabel>{t("form.annualInterestRate")}</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
@@ -107,7 +110,7 @@ export const MortgageCalculatorForm = ({
             name="loanTermInMonths"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Loan term in months</FormLabel>
+                <FormLabel>{t("form.loanTerm")}</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
@@ -125,21 +128,23 @@ export const MortgageCalculatorForm = ({
             name="installmentType"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Installment type</FormLabel>
+                <FormLabel>{t("form.installmentType")}</FormLabel>
                 <FormControl>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select installment type" />
+                      <SelectValue
+                        placeholder={t("form.installmentTypeDefaultValue")}
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value={INSTALLMENT_TYPE.Fixed}>
-                        Fixed
+                        {t("form.installmentTypeOptions.fixed")}
                       </SelectItem>
                       <SelectItem value={INSTALLMENT_TYPE.Decreasing}>
-                        Decreasing
+                        {t("form.installmentTypeOptions.decreasing")}
                       </SelectItem>
                     </SelectContent>
                   </Select>
@@ -154,7 +159,7 @@ export const MortgageCalculatorForm = ({
             name="startDate"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Start date</FormLabel>
+                <FormLabel>{t("form.startDate")}</FormLabel>
                 <FormControl>
                   <MonthPicker
                     selected={field.value}
@@ -168,7 +173,7 @@ export const MortgageCalculatorForm = ({
           />
         </div>
         <div className="flex justify-between">
-          <Button type="submit">Submit</Button>
+          <Button type="submit">{t("form.submit")}</Button>
 
           {children}
         </div>

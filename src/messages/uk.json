@@ -1,0 +1,31 @@
+{
+  "mortgage-calculator": {
+    "title": "Іпотечний калькулятор",
+    "columns": {
+      "date": "Дата",
+      "payment": "Платіж",
+      "interest": "Відсотки",
+      "principal": "Капітал",
+      "additionalPayment": "Надплата",
+      "remainingPrincipal": "Залишок капіталу",
+      "total": "Всього"
+    },
+    "paymentsStructureChartTitle": "Структура платежів",
+    "totalPaymentsStructureTitle": "Структура кредиту",
+    "firstPaymentStructureTitle": "Структура першого платежу",
+    "form": {
+      "loanAmount": "Сума кредиту",
+      "annualInterestRate": "Річна процентна ставка",
+      "loanTerm": "Термін кредиту в місяцях",
+      "installmentType": "Тип платежу",
+      "installmentTypeDefaultValue": "Виберіть тип платежу",
+      "installmentTypeOptions": {
+        "fixed": "Фіксований платіж",
+        "decreasing": "Платіж, що зменшується"
+      },
+      "startDate": "Дата початку",
+      "monthSelectDefaultValue": "Виберіть місяць",
+      "submit": "Розрахувати"
+    }
+  }
+}

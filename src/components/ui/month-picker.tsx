@@ -1,5 +1,6 @@
+import { useFormatter, useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 import { DPMonth, useDatePicker } from "@rehookify/datepicker";
-import { format } from "date-fns";
 import { CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
 
 import { Button } from "./button";
@@ -13,10 +14,15 @@ type MonthPickerProps = {
 };
 
 export const MonthPicker = ({ selected, onChange }: MonthPickerProps) => {
+  const t = useTranslations("mortgage-calculator");
+  const format = useFormatter();
+  const locale = useLocale();
+
   const {
     data: { calendars, months },
     propGetters: { addOffset, subtractOffset, monthButton },
   } = useDatePicker({
+    locale: { locale },
     selectedDates: selected ? [selected] : [],
     onDatesChange: () => {},
     offsetDate: selected,
@@ -41,7 +47,11 @@ export const MonthPicker = ({ selected, onChange }: MonthPickerProps) => {
             !selected && "text-muted-foreground"
           )}
         >
-          {selected ? format(selected, "LLLL yyyy") : <span>Pick a month</span>}
+          {selected ? (
+            format.dateTime(selected, { month: "long", year: "numeric" })
+          ) : (
+            <span>{t("form.monthSelectDefaultValue")}</span>
+          )}
           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
         </Button>
       </PopoverTrigger>

@@ -1,5 +1,31 @@
 {
   "mortgage-calculator": {
-    "title": "Mortgage Calculator"
+    "title": "Mortgage Calculator",
+    "columns": {
+      "date": "Date",
+      "payment": "Payment",
+      "interest": "Interest",
+      "principal": "Principal",
+      "additionalPayment": "Additional Payment",
+      "remainingPrincipal": "Remaining Principal",
+      "total": "Total"
+    },
+    "paymentsStructureChartTitle": "Mortgage payments structure",
+    "totalPaymentsStructureTitle": "Total payments structure",
+    "firstPaymentStructureTitle": "First payment structure",
+    "form": {
+      "loanAmount": "Loan Amount",
+      "annualInterestRate": "Annual Interest Rate",
+      "loanTerm": "Loan term in months",
+      "installmentType": "Installment type",
+      "installmentTypeDefaultValue": "Select installment type",
+      "installmentTypeOptions": {
+        "fixed": "Fixed",
+        "decreasing": "Decreasing"
+      },
+      "startDate": "Start date",
+      "monthSelectDefaultValue": "Pick a month",
+      "submit": "Submit"
+    }
   }
 }

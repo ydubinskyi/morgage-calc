@@ -1,5 +1,31 @@
 {
   "mortgage-calculator": {
-    "title": "Kalkulator hipoteczny"
+    "title": "Kalkulator hipoteczny",
+    "columns": {
+      "date": "Data",
+      "payment": "Rata",
+      "interest": "Odsetki",
+      "principal": "Kapitał",
+      "additionalPayment": "Nadpłata",
+      "remainingPrincipal": "Kapitał do spłaty",
+      "total": "Suma"
+    },
+    "paymentsStructureChartTitle": "Struktura spłat",
+    "totalPaymentsStructureTitle": "Struktura kredytu",
+    "firstPaymentStructureTitle": "Struktura pierwszej raty",
+    "form": {
+      "loanAmount": "Kwota kredytu",
+      "annualInterestRate": "Oprocentowanie",
+      "loanTerm": "Okres kredytu w miesiącach",
+      "installmentType": "Rodzaj raty",
+      "installmentTypeDefaultValue": "Wybierz rodzaj raty",
+      "installmentTypeOptions": {
+        "fixed": "Rata równa",
+        "decreasing": "Rate malejąca"
+      },
+      "startDate": "Data rozpoczęcia",
+      "monthSelectDefaultValue": "Wybierz miesiąc",
+      "submit": "Oblicz"
+    }
   }
 }

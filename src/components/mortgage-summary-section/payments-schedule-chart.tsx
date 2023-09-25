@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { useFormatter, useTranslations } from "next-intl";
 import {
   Bar,
   Brush,
@@ -27,10 +27,13 @@ type PaymentsScheduleChartProps = {
 export const PaymentsScheduleChart = ({
   mortgagePaymentsSchedule: data,
 }: PaymentsScheduleChartProps) => {
+  const t = useTranslations("mortgage-calculator");
+  const format = useFormatter();
+
   return (
     <div className="flex flex-col space-y-6">
       <p className="text-l font-semibold leading-none tracking-tight">
-        Mortgage payments schedule
+        {t("paymentsStructureChartTitle")}
       </p>
 
       <ResponsiveContainer width="100%" height={500}>
@@ -44,8 +47,10 @@ export const PaymentsScheduleChart = ({
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             dataKey="date"
-            name="Payment number"
-            tickFormatter={(value: Date) => format(value, "LLL yy")}
+            name={t("columns.date")}
+            tickFormatter={(value: Date) =>
+              format.dateTime(value, { month: "short", year: "2-digit" })
+            }
           />
           <YAxis
             yAxisId="left"
@@ -66,21 +71,21 @@ export const PaymentsScheduleChart = ({
           <Bar
             yAxisId="left"
             dataKey="principalPayment"
-            name="Principal payment"
+            name={t("columns.principal")}
             stackId="a"
             fill={PAYMENT_PART_COLOR.Principal}
           />
           <Bar
             yAxisId="left"
             dataKey="interestPayment"
-            name="Interest payment"
+            name={t("columns.interest")}
             stackId="a"
             fill={PAYMENT_PART_COLOR.Interest}
           />
           <Bar
             yAxisId="left"
             dataKey="additionalPayment"
-            name="Additional payment"
+            name={t("columns.additionalPayment")}
             stackId="a"
             fill={PAYMENT_PART_COLOR.Additional}
           />
@@ -88,7 +93,7 @@ export const PaymentsScheduleChart = ({
             yAxisId="right"
             type="monotone"
             dataKey="remainingPrincipal"
-            name="Remaining principal"
+            name={t("columns.remainingPrincipal")}
             stroke="black"
           />
         </ComposedChart>
@@ -102,11 +107,15 @@ const CustomTooltip = ({
   payload,
   label,
 }: TooltipProps<ValueType, NameType>) => {
+  const t = useTranslations("mortgage-calculator");
+  const format = useFormatter();
+
   if (active && payload && payload.length) {
     return (
       <div className="rounded-md bg-background border p-4">
         <p className="text-muted-foreground">
-          Payment date: {format(label, "LLL yyyy")}
+          {t("columns.date")}:{" "}
+          {format.dateTime(label, { month: "short", year: "numeric" })}
         </p>
         {payload.map((item) =>
           item.value ? (

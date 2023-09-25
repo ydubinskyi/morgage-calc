@@ -1,6 +1,7 @@
 import { memo, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
-import { addMonths, format } from "date-fns";
+import { useFormatter } from "next-intl";
+import { addMonths } from "date-fns";
 import { PlusSquare } from "lucide-react";
 import { z } from "zod";
 
@@ -59,6 +60,7 @@ export const AdditionalPaymentsDialog = memo(
     loanTermInMonths,
     onAdditionalPaymentsChange,
   }: AdditionalPaymentsDialogProps) => {
+    const format = useFormatter();
     const [open, setOpen] = useState(false);
 
     const form = useForm<AdditionalPaymentsArgs>({
@@ -75,18 +77,32 @@ export const AdditionalPaymentsDialog = memo(
       return range(1, loanTermInMonths + 1).reduce((acc, value) => {
         return {
           ...acc,
-          [format(addMonths(startDate, value - 1), "MM.yyyy")]: value,
+          [format.dateTime(addMonths(startDate, value - 1), {
+            month: "short",
+            year: "2-digit",
+          })]: value,
         };
       }, {});
-    }, [loanTermInMonths, startDate]);
+    }, [format, loanTermInMonths, startDate]);
 
     const onSubmit = form.handleSubmit((values) => {
       const { dateFrom, dateTo, value } = values;
 
       const startPaymentNumber =
-        monthPaymentToDateMap[format(dateFrom, "MM.yyyy")];
+        monthPaymentToDateMap[
+          format.dateTime(dateFrom, {
+            month: "short",
+            year: "2-digit",
+          })
+        ];
 
-      const endPaymentNumber = monthPaymentToDateMap[format(dateTo, "MM.yyyy")];
+      const endPaymentNumber =
+        monthPaymentToDateMap[
+          format.dateTime(dateTo, {
+            month: "short",
+            year: "2-digit",
+          })
+        ];
 
       if (startPaymentNumber && endPaymentNumber && value) {
         onAdditionalPaymentsChange(
