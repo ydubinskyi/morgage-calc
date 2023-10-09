@@ -40,7 +40,11 @@ export default async function RootLayout({
   return (
     <html lang={locale}>
       <body className={cn(inter.className)}>
-        <NextIntlClientProvider locale={locale} messages={messages}>
+        <NextIntlClientProvider
+          timeZone="Europe/Warsaw"
+          locale={locale}
+          messages={messages}
+        >
           <header className="mx-auto flex max-w-7xl lg:px-8">
             <SiteHeader />
           </header>

@@ -2,21 +2,19 @@ import { memo, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { ColumnDef } from "@tanstack/react-table";
 
-import { DataTable } from "../data-table";
-import { ColorPointTitle } from "../ui/color-point-title";
-import { MortgageScheduleTableContext } from "./mortgage-schedule-table-context";
 import { PaymentNumberCell } from "./payment-number-cell";
 
+import { DataTable } from "@/components/data-table";
+import { ColorPointTitle } from "@/components/ui/color-point-title";
 import { formatMoneyValue, sumArrayOfNumbers } from "@/lib/utils";
 import { MortgageScheduleItem, PAYMENT_PART_COLOR } from "@/types/mortgage";
 
 type MortgageScheduleTableProps = {
   data: MortgageScheduleItem[];
-  onAdditionalPaymentChange: (month: number, value: number) => void;
 };
 
 export const MortgageScheduleTable = memo(
-  ({ data, onAdditionalPaymentChange }: MortgageScheduleTableProps) => {
+  ({ data }: MortgageScheduleTableProps) => {
     const t = useTranslations("mortgage-calculator");
 
     const columns: ColumnDef<MortgageScheduleItem>[] = useMemo(
@@ -34,8 +32,8 @@ export const MortgageScheduleTable = memo(
           footer: ({ table }) =>
             formatMoneyValue(
               sumArrayOfNumbers(
-                table.getRowModel().rows.map((item) => item.original.payment)
-              )
+                table.getRowModel().rows.map((item) => item.original.payment),
+              ),
             ),
         },
         {
@@ -52,8 +50,8 @@ export const MortgageScheduleTable = memo(
               sumArrayOfNumbers(
                 table
                   .getRowModel()
-                  .rows.map((item) => item.original.interestPayment)
-              )
+                  .rows.map((item) => item.original.interestPayment),
+              ),
             ),
         },
         {
@@ -70,8 +68,8 @@ export const MortgageScheduleTable = memo(
               sumArrayOfNumbers(
                 table
                   .getRowModel()
-                  .rows.map((item) => item.original.principalPayment)
-              )
+                  .rows.map((item) => item.original.principalPayment),
+              ),
             ),
         },
         {
@@ -88,8 +86,8 @@ export const MortgageScheduleTable = memo(
               sumArrayOfNumbers(
                 table
                   .getRowModel()
-                  .rows.map((item) => item.original.additionalPayment)
-              )
+                  .rows.map((item) => item.original.additionalPayment),
+              ),
             ),
         },
         {
@@ -98,17 +96,11 @@ export const MortgageScheduleTable = memo(
           cell: ({ row }) => row.original.fRemainingPrincipal,
         },
       ],
-      [t]
+      [t],
     );
 
-    return (
-      <MortgageScheduleTableContext.Provider
-        value={{ onAdditionalPaymentChange }}
-      >
-        <DataTable columns={columns} data={data} />
-      </MortgageScheduleTableContext.Provider>
-    );
-  }
+    return <DataTable columns={columns} data={data} />;
+  },
 );
 
 MortgageScheduleTable.displayName = "MortgageScheduleTable";

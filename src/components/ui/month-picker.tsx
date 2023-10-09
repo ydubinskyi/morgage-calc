@@ -44,7 +44,7 @@ export const MonthPicker = ({ selected, onChange }: MonthPickerProps) => {
           variant="outline"
           className={cn(
             "flex w-full pl-3 text-left font-normal ",
-            !selected && "text-muted-foreground"
+            !selected && "text-muted-foreground",
           )}
         >
           {selected ? (
@@ -57,7 +57,7 @@ export const MonthPicker = ({ selected, onChange }: MonthPickerProps) => {
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
         <div className="p-1">
-          <header className="grid grid-cols-3 items-center justify-items-center mb-2">
+          <header className="mb-2 grid grid-cols-3 items-center justify-items-center">
             <Button
               variant="ghost"
               size="icon"
@@ -91,7 +91,7 @@ export const MonthPicker = ({ selected, onChange }: MonthPickerProps) => {
 
 export const getMonthClassName = (
   className: string,
-  { selected, now, disabled }: DPMonth
+  { selected, now, disabled }: DPMonth,
 ) =>
   cn(className, {
     "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground":

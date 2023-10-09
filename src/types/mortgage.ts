@@ -21,6 +21,13 @@ export type AdditionalPayments = {
   };
 };
 
+export type AdditionalPaymentV2 = {
+  paymentNumberFrom: number;
+  paymentNumberTo: number;
+  value: number;
+  overpaymentEffect: OverpaymentEffectType;
+}
+
 export type CalcMortgageScheduleArgs = {
   principal: number;
   annualInterestRate: number;

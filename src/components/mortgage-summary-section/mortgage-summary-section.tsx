@@ -1,10 +1,10 @@
 import { memo, useMemo } from "react";
 import { useTranslations } from "next-intl";
 
-import { Card } from "../ui/card";
 import { PaymentStructureChart } from "./payment-structure-chart";
 import { PaymentsScheduleChart } from "./payments-schedule-chart";
 
+import { Card } from "@/components/ui/card";
 import { roundToFixedTwo } from "@/lib/calc-utils";
 import { sumArrayOfNumbers } from "@/lib/utils";
 import { MortgageScheduleItem } from "@/types/mortgage";
@@ -22,30 +22,30 @@ export const MortgageSummarySection = memo(
       () =>
         roundToFixedTwo(
           sumArrayOfNumbers(
-            mortgagePaymentsSchedule.map((item) => item.principalPayment)
-          )
+            mortgagePaymentsSchedule.map((item) => item.principalPayment),
+          ),
         ),
-      [mortgagePaymentsSchedule]
+      [mortgagePaymentsSchedule],
     );
 
     const totalInterestPayment = useMemo(
       () =>
         roundToFixedTwo(
           sumArrayOfNumbers(
-            mortgagePaymentsSchedule.map((item) => item.interestPayment)
-          )
+            mortgagePaymentsSchedule.map((item) => item.interestPayment),
+          ),
         ),
-      [mortgagePaymentsSchedule]
+      [mortgagePaymentsSchedule],
     );
 
     const totalAdditionalPayment = useMemo(
       () =>
         roundToFixedTwo(
           sumArrayOfNumbers(
-            mortgagePaymentsSchedule.map((item) => item.additionalPayment)
-          )
+            mortgagePaymentsSchedule.map((item) => item.additionalPayment),
+          ),
         ),
-      [mortgagePaymentsSchedule]
+      [mortgagePaymentsSchedule],
     );
 
     const firstPaymentPrincipalPayment =
@@ -66,7 +66,7 @@ export const MortgageSummarySection = memo(
     return (
       <>
         <div className="grid grid-cols-2 gap-6">
-          <Card className="p-6 mb-6" pending={pending}>
+          <Card className="mb-6 p-6" pending={pending}>
             <PaymentStructureChart
               title={t("totalPaymentsStructureTitle")}
               principalPayment={totalPrincipalPayment}
@@ -74,7 +74,7 @@ export const MortgageSummarySection = memo(
               additionalPayment={totalAdditionalPayment}
             />
           </Card>
-          <Card className="p-6 mb-6" pending={pending}>
+          <Card className="mb-6 p-6" pending={pending}>
             <PaymentStructureChart
               title={t("firstPaymentStructureTitle")}
               principalPayment={firstPaymentPrincipalPayment}
@@ -84,14 +84,14 @@ export const MortgageSummarySection = memo(
           </Card>
         </div>
 
-        <Card className="p-6 mb-6" pending={pending}>
+        <Card className="mb-6 p-6" pending={pending}>
           <PaymentsScheduleChart
             mortgagePaymentsSchedule={mortgagePaymentsSchedule}
           />
         </Card>
       </>
     );
-  }
+  },
 );
 
 MortgageSummarySection.displayName = "MortgageSummarySection";

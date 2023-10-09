@@ -4,15 +4,18 @@ import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useDebounce } from "use-debounce";
 
+import {
+  AdditionalPaymentItem,
+  AdditionalPaymentsSection,
+} from "../additional-payments-section/additional-payments-section";
 import { MortgageScheduleTable } from "../mortgage-schedule-table/mortgage-schedule-table";
 import { MortgageSummarySection } from "../mortgage-summary-section/mortgage-summary-section";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { AdditionalPaymentsDialog } from "./additional-payments-dialog";
 import {
   MortgageArgs,
   MortgageCalculatorForm,
 } from "./mortgage-calculator-form";
 
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCalcWorker } from "@/hooks/useCalcWorker";
 import { AdditionalPayments, MortgageScheduleItem } from "@/types/mortgage";
 
@@ -34,15 +37,10 @@ export const MortgageCalculator = () => {
   const hasSchedule = mortgagePaymentsSchedule.length > 0;
 
   const onAdditionalPaymentChange = useCallback(
-    (paymentNumber: number, value: number) => {
-      // setAdditionalPayments((prev) => ({
-      //   ...prev,
-      //   [paymentNumber]: {
-      //     value,
-      //   },
-      // }));
+    (values: AdditionalPaymentItem[]) => {
+      console.log({ values });
     },
-    []
+    [],
   );
 
   const onBulkAdditionalPaymentsChange = useCallback(
@@ -52,7 +50,7 @@ export const MortgageCalculator = () => {
         ...values,
       }));
     },
-    []
+    [],
   );
 
   const calculateSchedule = useCallback(
@@ -75,7 +73,7 @@ export const MortgageCalculator = () => {
               loanTermInMonths,
               additionalPayments: deferredAdditionalPayments,
               startingDate: startDate,
-            }
+            },
           );
       } else {
         schedule =
@@ -86,13 +84,13 @@ export const MortgageCalculator = () => {
               loanTermInMonths,
               additionalPayments: deferredAdditionalPayments,
               startingDate: startDate,
-            }
+            },
           );
       }
 
       setMortgagePaymentsSchedule(schedule ?? []);
     },
-    [calcWorkerApiRef, deferredAdditionalPayments]
+    [calcWorkerApiRef, deferredAdditionalPayments],
   );
 
   const onSubmit = (values: MortgageArgs) => {
@@ -114,32 +112,19 @@ export const MortgageCalculator = () => {
           <CardTitle>{t("title")}</CardTitle>
         </CardHeader>
         <CardContent>
-          <MortgageCalculatorForm onSubmit={onSubmit}>
-            {mortgageArgs && (
-              <AdditionalPaymentsDialog
-                startDate={mortgageArgs?.startDate}
-                loanTermInMonths={
-                  mortgageArgs?.loanTermInMonths >
-                  mortgagePaymentsSchedule.length
-                    ? mortgageArgs?.loanTermInMonths
-                    : mortgagePaymentsSchedule.length
-                }
-                onAdditionalPaymentsChange={onBulkAdditionalPaymentsChange}
-              />
-            )}
-          </MortgageCalculatorForm>
+          <MortgageCalculatorForm onSubmit={onSubmit}></MortgageCalculatorForm>
         </CardContent>
       </Card>
 
       {hasSchedule && (
         <>
+          <AdditionalPaymentsSection
+            onAdditionalPaymentsChange={onAdditionalPaymentChange}
+          />
           <MortgageSummarySection
             mortgagePaymentsSchedule={mortgagePaymentsSchedule}
           />
-          <MortgageScheduleTable
-            data={mortgagePaymentsSchedule}
-            onAdditionalPaymentChange={onAdditionalPaymentChange}
-          />
+          <MortgageScheduleTable data={mortgagePaymentsSchedule} />
         </>
       )}
     </div>

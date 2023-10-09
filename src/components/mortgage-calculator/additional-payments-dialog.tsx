@@ -113,8 +113,8 @@ export const AdditionalPaymentsDialog = memo(
                 value,
                 overpaymentEffect: OVERPAYMENT_EFFECT.LowerInstallment,
               },
-            ])
-          )
+            ]),
+          ),
         );
 
         form.reset();
@@ -245,7 +245,7 @@ export const AdditionalPaymentsDialog = memo(
         </DialogContent>
       </Dialog>
     );
-  }
+  },
 );
 
 AdditionalPaymentsDialog.displayName = "AdditionalPaymentsDialog";

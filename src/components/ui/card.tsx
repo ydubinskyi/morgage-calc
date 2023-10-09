@@ -14,14 +14,14 @@ const Card = React.forwardRef<
     ref={ref}
     className={cn(
       "rounded-lg border bg-card text-card-foreground shadow-sm",
-      (disabled || pending) && "opacity-50 pointer-events-none relative",
-      className
+      (disabled || pending) && "pointer-events-none relative opacity-50",
+      className,
     )}
     {...props}
   >
     {props.children}
     {pending && (
-      <div className="absolute top-0 left-0 w-full h-full grid place-items-center">
+      <div className="absolute left-0 top-0 grid h-full w-full place-items-center">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     )}
@@ -49,7 +49,7 @@ const CardTitle = React.forwardRef<
     ref={ref}
     className={cn(
       "text-2xl font-semibold leading-none tracking-tight",
-      className
+      className,
     )}
     {...props}
   />

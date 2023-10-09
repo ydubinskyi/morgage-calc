@@ -4,7 +4,7 @@ import LocaleSwitcher from "./locale-switcher";
 
 export const SiteHeader = () => {
   return (
-    <div className="flex h-16 items-center justify-between w-full">
+    <div className="flex h-16 w-full items-center justify-between">
       <nav className={"flex items-center space-x-4 lg:space-x-6"}>
         <Link
           href="/"

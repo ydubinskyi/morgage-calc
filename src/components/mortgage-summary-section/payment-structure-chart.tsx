@@ -10,7 +10,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-import { ColorPointTitle } from "../ui/color-point-title";
+import { ColorPointTitle } from "@/components/ui/color-point-title";
 import {
   Table,
   TableBody,
@@ -18,8 +18,7 @@ import {
   TableFooter,
   TableHead,
   TableRow,
-} from "../ui/table";
-
+} from "@/components/ui/table";
 import { formatMoneyValue } from "@/lib/utils";
 import { PAYMENT_PART_COLOR } from "@/types/mortgage";
 
@@ -60,7 +59,7 @@ export const PaymentStructureChart = ({
           ]
         : []),
     ],
-    [t, principalPayment, interestPayment, additionalPayment]
+    [t, principalPayment, interestPayment, additionalPayment],
   );
 
   return (
@@ -84,11 +83,11 @@ export const PaymentStructureChart = ({
             ))}
           </TableBody>
           <TableFooter>
-            <TableRow className="hover:bg-transparent border-t border-b-0">
+            <TableRow className="border-b-0 border-t hover:bg-transparent">
               <TableHead>{t("columns.total")}</TableHead>
               <TableHead className="text-right">
                 {formatMoneyValue(
-                  principalPayment + interestPayment + additionalPayment
+                  principalPayment + interestPayment + additionalPayment,
                 )}
               </TableHead>
             </TableRow>

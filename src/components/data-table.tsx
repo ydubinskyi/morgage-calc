@@ -34,7 +34,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div
-      className="flex flex-col h-100 overflow-hidden rounded-lg border"
+      className="h-100 flex flex-col overflow-hidden rounded-lg border"
       style={{ maxHeight: "calc(100vh - 2rem" }}
     >
       <Table className="relative flex-grow overflow-auto">
@@ -51,7 +51,7 @@ export function DataTable<TData, TValue>({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </TableHead>
                 );
@@ -85,7 +85,7 @@ export function DataTable<TData, TValue>({
           {table.getFooterGroups().map((footerGroup) => (
             <TableRow
               key={footerGroup.id}
-              className="bg-muted/100 hover:bg-muted/100 border-b-0"
+              className="border-b-0 bg-muted/100 hover:bg-muted/100"
             >
               {footerGroup.headers.map((header) => (
                 <TableHead key={header.id}>
@@ -93,7 +93,7 @@ export function DataTable<TData, TValue>({
                     ? null
                     : flexRender(
                         header.column.columnDef.footer,
-                        header.getContext()
+                        header.getContext(),
                       )}
                 </TableHead>
               ))}

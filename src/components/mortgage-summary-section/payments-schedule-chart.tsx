@@ -112,7 +112,7 @@ const CustomTooltip = ({
 
   if (active && payload && payload.length) {
     return (
-      <div className="rounded-md bg-background border p-4">
+      <div className="rounded-md border bg-background p-4">
         <p className="text-muted-foreground">
           {t("columns.date")}:{" "}
           {format.dateTime(label, { month: "short", year: "numeric" })}
@@ -120,9 +120,9 @@ const CustomTooltip = ({
         {payload.map((item) =>
           item.value ? (
             <p key={item.name}>{`${item.name} : ${formatMoneyValue(
-              Number(item.value)
+              Number(item.value),
             )}`}</p>
-          ) : null
+          ) : null,
         )}
       </div>
     );

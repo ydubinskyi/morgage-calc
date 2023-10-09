@@ -1,7 +1,7 @@
 import { memo } from "react";
 
 import { Input } from "../ui/input";
-import { useMortgageScheduleTableContext } from "./mortgage-schedule-table-context";
+// import { useMortgageScheduleTableContext } from "./mortgage-schedule-table-context";
 
 type AdditionalPaymentCellProps = {
   paymentNumber: number;
@@ -10,14 +10,14 @@ type AdditionalPaymentCellProps = {
 
 export const AdditionalPaymentCell = memo(
   ({ paymentNumber, value }: AdditionalPaymentCellProps) => {
-    const { onAdditionalPaymentChange } = useMortgageScheduleTableContext();
+
     return (
       <Input
         key={value}
         type="number"
         defaultValue={value}
         onChange={(e) =>
-          onAdditionalPaymentChange(paymentNumber, e.target.valueAsNumber ?? 0)
+          // onAdditionalPaymentChange(paymentNumber, e.target.valueAsNumber ?? 0)
         }
       />
     );

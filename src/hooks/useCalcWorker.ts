@@ -9,7 +9,7 @@ export const useCalcWorker = () => {
 
   useEffect(() => {
     workerRef.current = new Worker(
-      new URL("../workers/calc.worker", import.meta.url)
+      new URL("../workers/calc.worker", import.meta.url),
     );
 
     workerApiRef.current = wrap<WorkerApi>(workerRef.current);
