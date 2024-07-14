@@ -10,18 +10,17 @@ type AdditionalPaymentCellProps = {
 
 export const AdditionalPaymentCell = memo(
   ({ paymentNumber, value }: AdditionalPaymentCellProps) => {
-
     return (
       <Input
         key={value}
         type="number"
         defaultValue={value}
-        onChange={(e) =>
+        onChange={(e) => {
           // onAdditionalPaymentChange(paymentNumber, e.target.valueAsNumber ?? 0)
-        }
+        }}
       />
     );
-  }
+  },
 );
 
 AdditionalPaymentCell.displayName = "AdditionalPaymentCell";

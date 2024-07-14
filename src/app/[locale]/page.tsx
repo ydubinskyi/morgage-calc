@@ -1,6 +1,4 @@
-"use client";
-
-import Link from "next-intl/link";
+import { unstable_setRequestLocale as setRequestLocale } from "next-intl/server";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -11,8 +9,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { locales } from "@/i18n";
+import { Link } from "@/navigation";
 
-export default function Home() {
+export async function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
+
+export default function Home({
+  params: { locale },
+}: {
+  params: { locale: string };
+}) {
+  setRequestLocale(locale);
+
   return (
     <div className="grid grid-cols-3 gap-6">
       <Card>

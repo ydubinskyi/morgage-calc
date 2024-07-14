@@ -1,6 +1,6 @@
-import Link from "next-intl/link";
-
 import LocaleSwitcher from "./locale-switcher";
+
+import { Link } from "@/navigation";
 
 export const SiteHeader = () => {
   return (

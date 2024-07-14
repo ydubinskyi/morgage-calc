@@ -1,9 +1,8 @@
 "use client";
 
+import { useTransition } from "react";
+import { useParams } from "next/navigation";
 import { useLocale } from "next-intl";
-import { usePathname, useRouter } from "next-intl/client";
-
-import { i18n } from "../../i18n.config";
 
 import {
   Select,
@@ -12,23 +11,39 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { locales } from "@/i18n";
+import { usePathname, useRouter } from "@/navigation";
 
 export default function LocaleSwitcher() {
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
+  const params = useParams();
+  const [isPending, startTransition] = useTransition();
 
   const onLocaleChange = (locale: string) => {
-    router.replace(pathname, { locale });
+    startTransition(() => {
+      router.replace(
+        // @ts-expect-error -- TypeScript will validate that only known `params`
+        // are used in combination with a given `pathname`. Since the two will
+        // always match for the current route, we can skip runtime checks.
+        { pathname, params },
+        { locale: locale },
+      );
+    });
   };
 
   return (
-    <Select onValueChange={onLocaleChange} defaultValue={locale}>
+    <Select
+      disabled={isPending}
+      onValueChange={onLocaleChange}
+      defaultValue={locale}
+    >
       <SelectTrigger>
         <SelectValue placeholder="Language" />
       </SelectTrigger>
       <SelectContent>
-        {i18n.locales.map((lang) => (
+        {locales.map((lang) => (
           <SelectItem key={lang} value={lang}>
             {lang.toLocaleUpperCase()}
           </SelectItem>
