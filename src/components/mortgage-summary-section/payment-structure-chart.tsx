@@ -2,14 +2,14 @@
 
 import { useMemo } from "react";
 import { useTranslations } from "next-intl";
-import {
-  Cell,
-  Pie,
-  PieChart,
-  PieLabelRenderProps,
-  ResponsiveContainer,
-} from "recharts";
+import { Label, Pie, PieChart, PieLabelRenderProps } from "recharts";
 
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 import { ColorPointTitle } from "@/components/ui/color-point-title";
 import {
   Table,
@@ -37,29 +37,53 @@ export const PaymentStructureChart = ({
 }: TotalPaymentsStructureChartProps) => {
   const t = useTranslations("mortgage-calculator");
 
+  const totalPayment = principalPayment + interestPayment + additionalPayment;
+
+  const config = useMemo(
+    () =>
+      ({
+        principal: {
+          label: t("columns.principal"),
+          color: PAYMENT_PART_COLOR.Principal,
+        },
+        interest: {
+          label: t("columns.interest"),
+          color: PAYMENT_PART_COLOR.Interest,
+        },
+        additionalPayment: {
+          label: t("columns.additionalPayment"),
+          color: PAYMENT_PART_COLOR.Additional,
+        },
+      }) as const satisfies ChartConfig,
+    [t],
+  );
+
   const data = useMemo(
     () => [
       {
-        name: t("columns.principal"),
+        name: "principal",
         value: principalPayment,
-        color: PAYMENT_PART_COLOR.Principal,
+        percent: principalPayment / totalPayment,
+        fill: PAYMENT_PART_COLOR.Principal,
       },
       {
-        name: t("columns.interest"),
+        name: "interest",
         value: interestPayment,
-        color: PAYMENT_PART_COLOR.Interest,
+        percent: interestPayment / totalPayment,
+        fill: PAYMENT_PART_COLOR.Interest,
       },
       ...(additionalPayment
         ? [
             {
-              name: t("columns.additionalPayment"),
+              name: "additionalPayment",
               value: additionalPayment,
-              color: PAYMENT_PART_COLOR.Additional,
+              percent: additionalPayment / totalPayment,
+              fill: PAYMENT_PART_COLOR.Additional,
             },
           ]
         : []),
     ],
-    [t, principalPayment, interestPayment, additionalPayment],
+    [principalPayment, totalPayment, interestPayment, additionalPayment],
   );
 
   return (
@@ -74,10 +98,14 @@ export const PaymentStructureChart = ({
             {data.map((item) => (
               <TableRow key={item.name} className="hover:bg-transparent">
                 <TableHead>
-                  <ColorPointTitle title={item.name} color={item.color} />
+                  <ColorPointTitle
+                    title={config[item.name as keyof typeof config].label}
+                    color={config[item.name as keyof typeof config].color}
+                  />
                 </TableHead>
                 <TableCell className="text-right">
-                  {formatMoneyValue(item.value)}
+                  {formatMoneyValue(item.value)} (
+                  {(item.percent * 100).toFixed(2)}%)
                 </TableCell>
               </TableRow>
             ))}
@@ -95,23 +123,68 @@ export const PaymentStructureChart = ({
         </Table>
       </div>
 
-      <ResponsiveContainer width="100%" height={240}>
-        <PieChart>
-          <Pie
-            data={data}
-            cx="50%"
-            cy="50%"
-            outerRadius={100}
-            dataKey="value"
-            label={renderCustomizedLabel}
-            labelLine={false}
-          >
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color} />
-            ))}
-          </Pie>
-        </PieChart>
-      </ResponsiveContainer>
+      <div className="flex-1">
+        <ChartContainer
+          config={config}
+          className="mx-auto aspect-square max-h-[360px]"
+        >
+          <PieChart>
+            <ChartTooltip
+              cursor={false}
+              content={
+                <ChartTooltipContent
+                  labelClassName="mr-1"
+                  valueFormatter={(value, _name, item) => {
+                    return (
+                      <span className="ml-2">
+                        {`${formatMoneyValue(value as number)} (${(item?.payload.percent * 100).toFixed(0)}%)`}
+                      </span>
+                    );
+                  }}
+                />
+              }
+            />
+            <Pie
+              data={data}
+              dataKey="value"
+              nameKey="name"
+              innerRadius={90}
+              strokeWidth={5}
+              stroke="0"
+            >
+              <Label
+                content={({ viewBox }) => {
+                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                    return (
+                      <text
+                        x={viewBox.cx}
+                        y={viewBox.cy}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                      >
+                        <tspan
+                          x={viewBox.cx}
+                          y={viewBox.cy}
+                          className="fill-foreground text-xl font-bold"
+                        >
+                          {formatMoneyValue(totalPayment)}
+                        </tspan>
+                        <tspan
+                          x={viewBox.cx}
+                          y={(viewBox.cy || 0) + 24}
+                          className="fill-muted-foreground"
+                        >
+                          {t("columns.total")}
+                        </tspan>
+                      </text>
+                    );
+                  }
+                }}
+              />
+            </Pie>
+          </PieChart>
+        </ChartContainer>
+      </div>
     </div>
   );
 };

@@ -26,7 +26,7 @@ export type AdditionalPaymentV2 = {
   paymentNumberTo: number;
   value: number;
   overpaymentEffect: OverpaymentEffectType;
-}
+};
 
 export type CalcMortgageScheduleArgs = {
   principal: number;
@@ -51,7 +51,7 @@ export const OVERPAYMENT_EFFECT = {
 export type OverpaymentEffectType = keyof typeof OVERPAYMENT_EFFECT;
 
 export const PAYMENT_PART_COLOR = {
-  Principal: "#4caf50",
-  Interest: "#ff5722",
-  Additional: "#9c27b0",
+  Principal: "hsl(var(--chart-1))",
+  Interest: "hsl(var(--chart-2))",
+  Additional: "hsl(var(--chart-3))",
 } as const;
