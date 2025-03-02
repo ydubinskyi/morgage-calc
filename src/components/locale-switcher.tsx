@@ -11,8 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { locales } from "@/i18n";
-import { usePathname, useRouter } from "@/navigation";
+import { locales } from "@/i18n/routing";
+import { usePathname, useRouter } from "@/i18n/navigation";
 
 export default function LocaleSwitcher() {
   const locale = useLocale();

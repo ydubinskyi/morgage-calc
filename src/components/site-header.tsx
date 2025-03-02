@@ -1,6 +1,6 @@
 import LocaleSwitcher from "./locale-switcher";
 
-import { Link } from "@/navigation";
+import { Link } from "@/i18n/navigation";
 
 export const SiteHeader = () => {
   return (

@@ -1,4 +1,4 @@
-import { unstable_setRequestLocale as setRequestLocale } from "next-intl/server";
+import { setRequestLocale } from "next-intl/server";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -9,23 +9,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { locales } from "@/i18n";
-import { Link } from "@/navigation";
+import { routing } from "@/i18n/routing";
+import { Link } from "@/i18n/navigation";
 
 export async function generateStaticParams() {
-  return locales.map((locale) => ({ locale }));
+  return routing.locales.map((locale) => ({ locale }));
 }
 
-export default async function Home(
-  props: {
-    params: Promise<{ locale: string }>;
-  }
-) {
-  const params = await props.params;
-
-  const {
-    locale
-  } = params;
+export default async function Home({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
 
   setRequestLocale(locale);
 
