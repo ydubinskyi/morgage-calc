@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useFormatter, useTranslations } from "next-intl";
 import {
   Bar,
@@ -17,6 +18,15 @@ import {
   ValueType,
 } from "recharts/types/component/DefaultTooltipContent";
 
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "../ui/chart";
+
 import { formatMoneyValue } from "@/lib/utils";
 import { MortgageScheduleItem, PAYMENT_PART_COLOR } from "@/types/mortgage";
 
@@ -30,13 +40,39 @@ export const PaymentsScheduleChart = ({
   const t = useTranslations("mortgage-calculator");
   const format = useFormatter();
 
+  const chartConfig = useMemo(
+    () =>
+      ({
+        date: {
+          label: t("columns.date"),
+        },
+        principalPayment: {
+          label: t("columns.principal"),
+          color: PAYMENT_PART_COLOR.Principal,
+        },
+        interestPayment: {
+          label: t("columns.interest"),
+          color: PAYMENT_PART_COLOR.Interest,
+        },
+        additionalPayment: {
+          label: t("columns.additionalPayment"),
+          color: PAYMENT_PART_COLOR.Additional,
+        },
+        remainingPrincipal: {
+          label: t("columns.remainingPrincipal"),
+          color: "black",
+        },
+      }) as const satisfies ChartConfig,
+    [t],
+  );
+
   return (
     <div className="flex flex-col space-y-6">
       <p className="text-l font-semibold leading-none tracking-tight">
         {t("paymentsStructureChartTitle")}
       </p>
 
-      <ResponsiveContainer width="100%" height={500}>
+      <ChartContainer config={chartConfig}>
         <ComposedChart
           data={data}
           margin={{
@@ -52,6 +88,7 @@ export const PaymentsScheduleChart = ({
               format.dateTime(value, { month: "short", year: "2-digit" })
             }
           />
+
           <YAxis
             yAxisId="left"
             orientation="left"
@@ -64,28 +101,33 @@ export const PaymentsScheduleChart = ({
             dataKey="remainingPrincipal"
             tickFormatter={(value: string) => formatMoneyValue(Number(value))}
           />
-          <Tooltip content={(props) => <CustomTooltip {...props} />} />
-          <Legend />
-          <Brush dataKey="date" height={20} stroke="#8884d8" />
+
+          <Brush
+            dataKey="date"
+            height={24}
+            stroke="#8884d8"
+            startIndex={0}
+            endIndex={60}
+            tickFormatter={(value: Date) =>
+              format.dateTime(value, { month: "short", year: "numeric" })
+            }
+          />
 
           <Bar
             yAxisId="left"
             dataKey="principalPayment"
-            name={t("columns.principal")}
             stackId="a"
             fill={PAYMENT_PART_COLOR.Principal}
           />
           <Bar
             yAxisId="left"
             dataKey="interestPayment"
-            name={t("columns.interest")}
             stackId="a"
             fill={PAYMENT_PART_COLOR.Interest}
           />
           <Bar
             yAxisId="left"
             dataKey="additionalPayment"
-            name={t("columns.additionalPayment")}
             stackId="a"
             fill={PAYMENT_PART_COLOR.Additional}
           />
@@ -93,11 +135,34 @@ export const PaymentsScheduleChart = ({
             yAxisId="right"
             type="monotone"
             dataKey="remainingPrincipal"
-            name={t("columns.remainingPrincipal")}
             stroke="black"
           />
+
+          <ChartTooltip
+            content={
+              <ChartTooltipContent
+                labelKey="date"
+                labelFormatter={(_label, payload) => {
+                  const item = payload?.[0]?.payload as MortgageScheduleItem;
+                  return `#${item.paymentNumber} ${format.dateTime(item.date, {
+                    month: "short",
+                    year: "numeric",
+                  })} `;
+                }}
+                valueFormatter={(value) => {
+                  return (
+                    <span className="ml-2">
+                      {`${formatMoneyValue(value as number)}`}
+                    </span>
+                  );
+                }}
+                hideIndicator
+              />
+            }
+          />
+          <ChartLegend content={<ChartLegendContent />} />
         </ComposedChart>
-      </ResponsiveContainer>
+      </ChartContainer>
     </div>
   );
 };

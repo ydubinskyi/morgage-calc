@@ -4,8 +4,8 @@ import { Remote, wrap } from "comlink";
 import { WorkerApi } from "@/workers/calc.worker";
 
 export const useCalcWorker = () => {
-  const workerRef = useRef<Worker>();
-  const workerApiRef = useRef<Remote<WorkerApi>>();
+  const workerRef = useRef<Worker>(undefined);
+  const workerApiRef = useRef<Remote<WorkerApi>>(undefined);
 
   useEffect(() => {
     workerRef.current = new Worker(
